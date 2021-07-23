@@ -39,9 +39,12 @@ namespace OJTTraining.Service
                     r.patients.CheckoutDate,
                     PatientIsDeleted = r.patients.IsDeleted
                 })
+#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
                 .Where(patient => patient.PatientIsDeleted == null || patient.PatientIsDeleted == false)
                 .Where(patient => patient.CheckinDate == null || patient.CheckinDate <= DateTime.Now)
+#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
                 .Where(patient => patient.CheckoutDate == null || patient.CheckoutDate > DateTime.Now);
+
 
             if (searchRoom is not null && !string.IsNullOrEmpty(searchRoom.RoomNumber))
             {
@@ -53,7 +56,9 @@ namespace OJTTraining.Service
                 {
                     r.RoomNumber,
                     r.RoomCapacity,
+#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
                     HasPatient = r.PatientGUID != null,
+#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
                     r.PatientGUID
                 })
                 .GroupBy(room => new { room.RoomNumber, room.RoomCapacity, room.HasPatient })
