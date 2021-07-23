@@ -6,12 +6,3 @@ build_job:
   stage: build
   script:
     - 'dotnet build'  # build the web application
-
-deploy_job:
-  stage: deploy
-  script:
-    - 'dotnet publish -c Release /p:PublishProfile=OJTTraining/Properties/PublishProfiles/IISProfile.pubxml $DEPLOY_PASSWORD' # deploy web application to server
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  dependencies:
-    - build_job
