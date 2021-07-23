@@ -1,0 +1,263 @@
+﻿@page "/patients"
+@attribute [Authorize]
+@using System.Globalization;
+@using Microsoft.AspNetCore.WebUtilities;
+
+@using OJTTraining.Data
+@using OJTTraining.Service
+@inject PatientService patientService
+@inject IJSRuntime js
+@inject NavigationManager NavManager
+
+<h1>Patient Info @(count != 0 ? "(" + count.ToString(CultureInfo.CurrentCulture) + ")" : "")</h1>
+
+<div class="card">
+    <div class="card-header nav-link" id="headingOne" @onclick="e => this.showSearch = !this.showSearch" role="button" style="cursor: pointer;">
+        <h5 class="mb-0">
+            Search Patient
+        </h5>
+    </div>
+    <div id="collapseOne" class="collapse @(showSearch ? "show" : "")" aria-labelledby="headingOne">
+        <div class="card-body">
+            <div class="form">
+                <div class="form-group">
+                    <label for="PatientName">Patient Name:</label>
+                    <input id="PatientName" @bind="patientScreen.PatientName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="RoomNumber">Room Number:</label>
+                    <div id="RoomNumber" class="row">
+                        <div class="col-md-10">
+                            <input @bind="patientScreen.RoomNumber" class="form-control" />
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-control selectpicker" @bind="match">
+                                <option value="0">Any</option>
+                                <option value="1">Exact</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="CheckinDate">Checkin Date:</label>
+                    <div id="CheckinDate" class="form-row">
+                        <div class="col-md-5">
+                            <input type="date" @bind="patientScreen.CheckinDateStart" class="form-control" />
+                        </div>
+                        <div class="col-md-2 my-auto" align="center">
+                            <span class="oi oi-minus" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="date" @bind="patientScreen.CheckinDateEnd" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="CheckoutDate">Checkout Date:</label>
+                    <div id="CheckoutDate" class="form-row">
+                        <div class="col-md-5">
+                            <input type="date" @bind="patientScreen.CheckoutDateStart" class="form-control" />
+                        </div>
+                        <div class="col-md-2 my-auto" align="center">
+                            <span class="oi oi-minus" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="date" @bind="patientScreen.CheckoutDateEnd" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" @onclick="() => SearchPatient()">
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"> Search </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="float-right">
+    <div class="row">
+        <div class="mr-2 my-1">
+            <DownloadDropdown Data="GetData" FileName="patients"></DownloadDropdown>
+        </div>
+        <AuthorizeView Roles="admin">
+            <div class="mr-3 my-1">
+                <a class="btn btn-primary" href="AddPatient">
+                    <span class="oi oi-plus" aria-hidden="true"> Add New </span>
+                </a>
+            </div>
+        </AuthorizeView>
+    </div>
+</div>
+
+<table class="table my-2">
+    <thead>
+        <tr>
+            <th>Patient Name</th>
+            <th>Room Number</th>
+            <th>Check In Date</th>
+            <th>Check Out Date</th>
+            <AuthorizeView Roles="admin">
+                <th>Action</th>
+            </AuthorizeView>
+        </tr>
+    </thead>
+    <tbody>
+        @if (patient is null)
+        {
+            <tr>
+                <td colspan="5" align="center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </td>
+            </tr>
+        }
+        else if (count == 0)
+        {
+            <tr>
+                <td colspan="5" align="center">
+                    <p><em>No Data</em></p>
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in patient)
+            {
+                <tr>
+                    <td>
+                        <a class="nav-link" href="ViewPatient/@item.PatientGUID">
+                            <b>@item.PatientName</b>
+                        </a>
+                    </td>
+                    <td>@item.RoomNumber</td>
+                    <td>@item.CheckinDate.ToString("g", CultureInfo.CurrentCulture)</td>
+                    <td>@item.CheckoutDate?.ToString("g", CultureInfo.CurrentCulture)</td>
+                    <AuthorizeView Roles="admin">
+                        <td>
+                            <span>
+                                <a class="btn btn-info my-1" href="EditPatient/@item.PatientGUID">
+                                    <span class="oi oi-pencil" aria-hidden="true"> Edit </span>
+                                </a>
+                                <a class="btn btn-danger my-1" href="DeletePatient/@item.PatientGUID">
+                                    <span class="oi oi-trash" aria-hidden="true"> Delete </span>
+                                </a>
+                            </span>
+                        </td>
+                    </AuthorizeView>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@if (patient is not null)
+{
+    <Pagination Skip="skip" Top="top" ViewCount="patient.Count" TotalCount="count" GetPage="GetPage" Change="Change"></Pagination>
+}
+
+@code {
+    private PatientSearch patientScreen = new PatientSearch();
+    private PatientSearch patientSearch = new PatientSearch();
+    private List<Patient> patient;
+
+    private int skip = 0;
+    private int top = 10;
+    private int count = 0;
+
+    private int currentPage { get { return (skip / top) + 1; } }
+    private int totalPage { get { return (int)Math.Ceiling((float)count / top); } }
+
+    private bool showSearch = false;
+    private bool exactMatch = false;
+
+    private int match
+    {
+        get { return exactMatch ? 1 : 0; }
+        set
+        {
+            exactMatch = value == 1;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("patientName", out var patientName))
+        {
+            patientScreen.PatientName = patientName;
+        }
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("roomNumber", out var roomNumber))
+        {
+            exactMatch = true;
+            patientScreen.RoomNumber = roomNumber;
+        }
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("checkinBy", out var checkinDate))
+        {
+            DateTime paramCheckinDate;
+            if (DateTime.TryParse(checkinDate, out paramCheckinDate))
+            {
+                patientScreen.CheckinDateEnd = paramCheckinDate;
+            }
+        }
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("checkoutBefore", out var checkoutDate))
+        {
+            DateTime paramCheckoutDate;
+            if (DateTime.TryParse(checkoutDate, out paramCheckoutDate))
+            {
+                patientScreen.CheckoutDateStart = paramCheckoutDate;
+            }
+        }
+
+        await SearchPatient();
+    }
+
+    async Task GetPage(int page)
+    {
+        skip = (page - 1) * top;
+
+        var response = await patientService.GetPatientsAsync(skip, top, patientSearch, exactMatch);
+        count = response.count;
+        patient = response.patient;
+    }
+
+    async Task Change(ChangeEventArgs e)
+    {
+        top = int.Parse(e.Value.ToString());
+        await GetPage(1);
+    }
+
+    async Task SearchPatient()
+    {
+        skip = 0;
+        count = 0;
+        patient = null;
+
+        patientSearch.Clone(patientScreen);
+
+        var response = await patientService.GetPatientsAsync(skip, top, patientSearch, exactMatch);
+        count = response.count;
+        patient = response.patient;
+    }
+
+    private async Task<byte[]> GetData()
+    {
+        var response = await patientService.GetPatientsAsync(0, 0, patientSearch, exactMatch);
+        return DownloadService.GenerateCSV<PatientView>(ConvertFrom(response.patient));
+    }
+
+    private List<PatientView> ConvertFrom(List<Patient> patient)
+    {
+        return patient.ConvertAll<PatientView>(
+            delegate (Patient patient)
+            {
+                return new PatientView
+                {
+                    PatientName = patient.PatientName,
+                    RoomNumber = patient.RoomNumber,
+                    CheckinDate = patient.CheckinDate,
+                    CheckoutDate = patient.CheckoutDate
+                };
+            });
+    }
+}

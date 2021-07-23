@@ -1,0 +1,80 @@
+﻿@if (TotalCount != 0)
+{
+    <div>
+        <div class="row">
+            <div class="ml-4 my-2">
+                <div class="row">
+                    <div class="mr-2 my-auto"><em>Showing @(Skip + 1) to @(Skip + ViewCount) of @TotalCount.</em></div>
+                    <div class="mr-2 my-auto"><em>Rows per page:</em></div>
+                    <div class="mr-2 my-auto">
+                        <select class="custom-select" value="@Top" @onchange="Change">
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="ml-auto mr-3 my-2">
+                <ul class="pagination">
+                    <li class="page-item @(Top + Skip > Top ? "" : "disabled")"><a class="page-link" @onclick="Previous">Previous</a></li>
+                    @if (currentPage > 4 && totalPage > 7)
+                    {
+                        <li class="page-item"><a class="page-link" @onclick="() => GetPage.InvokeAsync(currentPage - 4)">...</a></li>
+                    }
+
+                    @for (int i = 1; i <= totalPage; i++)
+                    {
+                        @if (i < currentPage - 3)
+                        {
+                            continue;
+                        }
+
+                        @if (i > currentPage + 3)
+                        {
+                            continue;
+                        }
+
+                        var j = i;
+                        <li class="page-item @(i == currentPage ? "active" : "")"><a class="page-link" @onclick="() => GetPage.InvokeAsync(j)">@i</a></li>
+
+                    }
+
+                    @if (currentPage + 3 < totalPage)
+                    {
+                        <li class="page-item"><a class="page-link" @onclick="() => GetPage.InvokeAsync(currentPage + 4)">...</a></li>
+                    }
+                    <li class="page-item @(Top + Skip < TotalCount ? "" : "disabled")"><a class="page-link" @onclick="Next">Next</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+
+@code{
+    private int currentPage { get { return (Skip / Top) + 1; } }
+    private int totalPage { get { return (int)Math.Ceiling((float)TotalCount / Top); } }
+
+    [Parameter] public int Skip { get; set; }
+    [Parameter] public int Top { get; set; }
+
+    [Parameter] public int ViewCount { get; set; }
+    [Parameter] public int TotalCount { get; set; }
+
+    [Parameter] public EventCallback<int> GetPage { get; set; }
+    [Parameter] public EventCallback<ChangeEventArgs> Change { get; set; }
+
+    async Task Next()
+    {
+        Skip = Skip + Top;
+
+        await GetPage.InvokeAsync(currentPage);
+    }
+
+    async Task Previous()
+    {
+        Skip = Skip - Top;
+
+        await GetPage.InvokeAsync(currentPage);
+    }
+}

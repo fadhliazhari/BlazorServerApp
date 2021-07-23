@@ -1,0 +1,73 @@
+﻿@page "/DeletePatient/{Id}"
+@attribute [Authorize(Roles = "admin")]
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using OJTTraining.Data
+@using OJTTraining.Service
+@inject PatientService patientService
+@inject NavigationManager NavigationManager
+
+<h2>Delete Patient</h2>
+<hr />
+<div>
+    <div class="form-group">
+        <label for="PatientName">Patient Name:</label>
+        <label id="PatientName">@obj.PatientName</label>
+    </div>
+    <div class="form-group">
+        <label for="RoomNumber">Room Number:</label>
+        <label id="RoomNumber">@obj.RoomNumber</label>
+    </div>
+    <div class="form-group">
+        <label for="CheckinDate">Checkin Date:</label>
+        <label id="CheckinDate">@obj.CheckinDate</label>
+    </div>
+    <div class="form-group">
+        <label for="CheckoutDate">Checkout Date:</label>
+        <label id="CheckoutDate">@obj.CheckoutDate</label>
+    </div>
+
+    <button class="btn btn-danger" @onclick="Delete">Delete</button>
+    <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+</div>
+
+<DeleteConfirmationDialog @ref="DeleteDialog" OnConfirm="DeleteCallback"></DeleteConfirmationDialog>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Patient obj = new Patient();
+
+    private DeleteConfirmationDialog DeleteDialog { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Task.Run(() => patientService.GetPatientAsync(Guid.Parse(Id)));
+    }
+
+    void Delete()
+    {
+        DeleteDialog.Open();
+    }
+
+    protected async void DeleteCallback()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        obj.UpdateDateTime = new DateTime();
+        obj.UpdatePIC = user.Identity.Name;
+        obj.IsDeleted = true;
+
+        await patientService.UpdatePatientAsync(obj);
+        NavigationManager.NavigateTo("Patients");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Patients");
+    }
+}

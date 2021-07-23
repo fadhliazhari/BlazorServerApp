@@ -1,0 +1,83 @@
+﻿@page "/AddRoom"
+@attribute [Authorize(Roles = "infra")]
+
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using OJTTraining.Data
+@using OJTTraining.Service
+@inject RoomService roomService
+@inject NavigationManager NavigationManager
+
+<h2>Add Room</h2>
+<hr />
+
+<EditForm EditContext="editContext" OnValidSubmit="@CreateRoom">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="RoomNumber">Room Number<span style="color : red;">*</span>:</label>
+        <InputText id="RoomNumber" @bind-Value="obj.RoomNumber" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="RoomCapacity">Room Capacity<span style="color : red;">*</span>:</label>
+        <InputNumber id="RoomCapacity" @bind-Value="obj.RoomCapacity" class="form-control" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+    <button class="btn btn-secondary" @onclick="Cancel" type="button">Cancel</button>
+</EditForm>
+
+@code {
+    Room obj = new Room();
+
+    private EditContext editContext;
+    private ValidationMessageStore messageStore;
+
+    protected override void OnInitialized()
+    {
+        editContext = new(obj);
+        editContext.OnValidationRequested += HandleValidationRequested;
+        messageStore = new(editContext);
+    }
+    void HandleValidationRequested(object sender, ValidationRequestedEventArgs args)
+    {
+        messageStore.Clear();
+    }
+
+    protected async void CreateRoom()
+    {
+        if (obj.RoomNumber != null && !obj.RoomNumber.Equals(""))
+        {
+            var roomNumber = await roomService.GetRoomAsync(obj.RoomNumber);
+
+            if (roomNumber?.RoomNumber != null)
+            {
+                messageStore.Add(() => obj.RoomNumber, $"Room Number '{obj.RoomNumber}' already exist");
+            }
+        }
+
+        editContext.NotifyValidationStateChanged();
+
+        var isValid = !editContext.GetValidationMessages().Any();
+
+        if (isValid)
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            obj.RegisterDateTime = DateTime.Now;
+            obj.RegisterPIC = user.Identity.Name;
+            obj.UpdateDateTime = DateTime.Now;
+            obj.UpdatePIC = user.Identity.Name;
+
+            await roomService.InsertRoomAsync(obj);
+            NavigationManager.NavigateTo("Rooms");
+        }
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Rooms");
+    }
+}

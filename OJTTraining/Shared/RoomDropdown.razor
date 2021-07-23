@@ -1,0 +1,118 @@
+﻿@inherits InputText
+@using OJTTraining.Data
+@using OJTTraining.Service
+@inject RoomService roomService
+
+<div class="dropdown @(showDropdown ? "show" : "")">
+    <input @ref="RoomInput" id="dropdownMenuLink" @attributes="AdditionalAttributes"
+           class="form-control @CssClass" autocomplete="off"
+           @bind="CurrentValueAsString" @onclick="@Open"
+           @oninput="@(async (e) => { await Change((string)e.Value); })" @onblur="OutFocus" />
+    <div class="dropdown-menu pre-scrollable @(showDropdown ? "show" : "")" aria-labelledby="dropdownMenuLink" style="min-width: 20rem;">
+        @if (dropDownList is null)
+        {
+            <div align="center">
+                <div class="spinner-border text-info" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        }
+        else if (roomCount == 0)
+        {
+            <a class="dropdown-item disabled">No Data</a>
+        }
+        else
+        {
+            <a class="dropdown-item disabled">
+                <div class="row"><div class="col"><b>Room Number</b></div><div class="col"><b>Room Status</b></div></div>
+            </a>
+            foreach (var room in dropDownList)
+            {
+                var roomNumber = room.RoomNumber;
+                var roomStatus = room.RoomStatus;
+
+                <a class="dropdown-item @(@room.RoomStatus == "Closed" ? "disabled" : "")" @onclick=@(() => Select(roomNumber)) role="button" style="@(@room.RoomStatus == "Closed" ? "background-color : lightgray" : "")">
+                    <div class="row"><div class="col">@room.RoomNumber</div><div class="col" style="color : @GetColor(roomStatus);">@room.RoomStatus</div></div>
+                </a>
+            }
+        }
+        @if (roomCount > maxCount)
+        {
+            <a class="dropdown-item" @onclick="More" tabindex="-1">@(roomCount - maxCount) More..</a>
+        }
+    </div>
+</div>
+
+@code {
+    ElementReference RoomInput { get; set; }
+
+    private List<RoomView> dropDownList;
+    RoomSearch roomSearch = new RoomSearch();
+    private int roomCount = 0;
+    private int maxCount = 10;
+
+    private bool showDropdown = false;
+    private bool isMore = false;
+
+    private async Task Open()
+    {
+        showDropdown = true;
+        await Change(CurrentValue);
+    }
+
+    private void Select(string args)
+    {
+        CurrentValue = args;
+        showDropdown = false;
+        EditContext.NotifyFieldChanged(FieldIdentifier);
+    }
+
+    private async Task Change(string newValue)
+    {
+        maxCount = 10;
+        showDropdown = true;
+        roomSearch.RoomNumber = newValue;
+        var response = await roomService.GetRoomsAsync(0, maxCount, roomSearch);
+        dropDownList = response.room;
+        roomCount = response.count;
+    }
+
+    private async Task More()
+    {
+        await RoomInput.FocusAsync();
+        isMore = true;
+
+        maxCount = maxCount + 10;
+        roomSearch.RoomNumber = CurrentValue;
+        var response = await roomService.GetRoomsAsync(0, maxCount, roomSearch);
+        dropDownList = response.room;
+        roomCount = response.count;
+    }
+
+    private async Task OutFocus()
+    {
+        await Task.Delay(200);
+        if (!isMore)
+        {
+            showDropdown = false;
+        }
+        isMore = false;
+
+    }
+
+    private string GetColor(string status)
+    {
+        switch (status)
+        {
+            case "Available":
+                return "Green";
+            case "Closed":
+                return "Red";
+            case "Overcrowded":
+                return "Orange";
+            case "Full":
+                return "Blue";
+        }
+        return "";
+    }
+} 

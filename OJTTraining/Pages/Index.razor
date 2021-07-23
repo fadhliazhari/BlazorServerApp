@@ -1,0 +1,37 @@
+﻿@page "/"
+
+<div class="jumbotron">
+    <h1 class="display-4">OJT Training Test Website</h1>
+    <p class="lead">This is a test website used for training</p>
+    <hr class="my-4">
+    <AuthorizeView>
+        <Authorized>
+            <h1>Hello, @context.User.Identity.Name!</h1>
+        </Authorized>
+        <Authorizing>
+            <h1>Authentication in progress</h1>
+        </Authorizing>
+        <NotAuthorized>
+            <p>Please log in to see available application.</p>
+            <p>Tester account:</p>
+            <ul>
+                <li>username:admin@test.com password:Tester</li>
+                <li>username:infra@test.com password:Tester</li>
+            </ul>
+            <p>You require '<b>admin</b>' role to edit data.</p>
+            <p>You require '<b>infra</b>' role to see rooms application.</p>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" href="Identity/Account/Login" role="button">Log In</a>
+            </p>
+        </NotAuthorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="admin">
+        <p>You have '<b>admin</b>' role.</p>
+    </AuthorizeView>
+    <AuthorizeView Roles="infra">
+        <p>You have '<b>infra</b>' role.</p>
+    </AuthorizeView>
+</div>
+
+
+

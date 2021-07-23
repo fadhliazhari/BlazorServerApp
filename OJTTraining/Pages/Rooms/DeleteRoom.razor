@@ -1,0 +1,108 @@
+﻿@page "/DeleteRoom/{Id}"
+@attribute [Authorize(Roles = "infra")]
+
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using OJTTraining.Data
+@using OJTTraining.Service
+@inject RoomService roomService
+@inject NavigationManager NavigationManager
+
+<h2>Delete Room</h2>
+<hr />
+
+<div>
+    @if (editContext is not null)
+    {
+        <EditForm EditContext="@editContext">
+            <ValidationSummary></ValidationSummary>
+        </EditForm>
+    }
+
+    <div class="form-group">
+        <label for="RoomNumber">Room Number:</label>
+        <label id="RoomNumber">@obj.RoomNumber</label>
+    </div>
+    <div class="form-group">
+        <label for="RoomCapacity">Room Capacity:</label>
+        <label id="RoomCapacity">@obj.RoomCapacity</label>
+    </div>
+    <div class="form-group">
+        <label for="RoomCapacity" class="font-weight-bold">No of Patients:</label>
+        <label id="RoomCapacity">
+            <a class="nav-link" href="@queryString">
+                <b>@noOfPatients</b>
+            </a>
+        </label>
+    </div>
+
+    <button class="btn btn-danger" @onclick="Delete">Delete</button>
+    <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+</div>
+
+<DeleteConfirmationDialog @ref="DeleteDialog" OnConfirm="DeleteCallback"></DeleteConfirmationDialog>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private Room obj = new Room();
+
+    private int noOfPatients;
+    private string queryString;
+
+    private EditContext editContext;
+    private ValidationMessageStore messageStore;
+
+    private DeleteConfirmationDialog DeleteDialog { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Task.Run(() => roomService.GetRoomAsync(Id));
+
+        editContext = new(obj);
+        editContext.OnValidationRequested += HandleValidationRequested;
+        messageStore = new(editContext);
+
+        noOfPatients = await roomService.GetNoUsedAsync(obj);
+        queryString = $"Patients?roomNumber={obj.RoomNumber}&checkinBy={DateTime.Now.ToString("d", CultureInfo.CurrentCulture)}&checkoutBefore={DateTime.Now.ToString("d", CultureInfo.CurrentCulture)}";
+    }
+
+    async void HandleValidationRequested(object sender, ValidationRequestedEventArgs args)
+    {
+        messageStore.Clear();
+
+        if (await roomService.CheckIfUsedAsync(obj))
+        {
+            messageStore.Add(() => obj.RoomNumber, "Room is currently being used");
+        }
+
+        editContext.NotifyValidationStateChanged();
+    }
+
+    void Delete()
+    {
+        if (editContext.Validate())
+        {
+            DeleteDialog.Open();
+        }
+    }
+
+    protected async Task DeleteCallback()
+    {
+        await roomService.DeleteRoomAsync(obj);
+        NavigationManager.NavigateTo("Rooms");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Rooms");
+    }
+
+    public void Dispose()
+    {
+        editContext.OnValidationRequested -= HandleValidationRequested;
+    }
+}

@@ -1,0 +1,57 @@
+﻿@page "/ViewRoom/{Id}"
+@attribute [Authorize(Roles = "infra")]
+
+@using System.Globalization
+
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using OJTTraining.Data
+@using OJTTraining.Service
+@inject RoomService roomService
+@inject NavigationManager NavigationManager
+
+<h2>View Room</h2>
+<hr />
+
+<div>
+    <div class="form-group">
+        <label for="RoomNumber" class="font-weight-bold">Room Number:</label>
+        <label id="RoomNumber">@obj.RoomNumber</label>
+    </div>
+    <div class="form-group">
+        <label for="RoomCapacity" class="font-weight-bold">Room Capacity:</label>
+        <label id="RoomCapacity">@obj.RoomCapacity</label>
+    </div>
+    <div class="form-group">
+        <label for="RoomCapacity" class="font-weight-bold">No of Patients:</label>
+        <label id="RoomCapacity">
+            <a class="nav-link" href="@queryString">
+                <b>@noOfPatients</b>
+            </a>
+        </label>
+    </div>
+
+    <button class="btn btn-secondary" @onclick="Cancel">Close</button>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Room obj = new Room();
+
+    private int noOfPatients;
+    private string queryString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Task.Run(() => roomService.GetRoomAsync(Id));
+        noOfPatients = await roomService.GetNoUsedAsync(obj);
+        queryString = $"Patients?roomNumber={obj.RoomNumber}&checkinBy={DateTime.Now.ToString("d", CultureInfo.CurrentCulture)}&checkoutBefore={DateTime.Now.ToString("d", CultureInfo.CurrentCulture)}";
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Rooms");
+    }
+}

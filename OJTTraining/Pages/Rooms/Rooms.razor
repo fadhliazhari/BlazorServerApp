@@ -1,0 +1,189 @@
+﻿@page "/rooms"
+@attribute [Authorize(Roles = "infra")]
+@using System.Globalization;
+
+@using OJTTraining.Data
+@using OJTTraining.Service
+@inject RoomService roomService
+@inject IJSRuntime js
+
+<h1>Room Info @(count != 0 ? "(" + count.ToString(CultureInfo.CurrentCulture) + ")" : "")</h1>
+
+<div class="card">
+    <div class="card-header nav-link" id="headingOne" @onclick="e => this.showSearch = !this.showSearch" role="button" style="cursor: pointer;">
+        <h5 class="mb-0">
+            Search Room
+        </h5>
+    </div>
+    <div id="collapseOne" class="collapse @(showSearch ? "show" : "")" aria-labelledby="headingOne">
+        <div class="card-body">
+            <div class="form">
+                <div class="form-group">
+                    <label for="RoomNumber">Room Number:</label>
+                    <input id="RoomNumber" @bind="roomScreen.RoomNumber" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="RoomStatus">Room Status:</label>
+                    <select class="form-control selectpicker" @bind="roomScreen.Status">
+                        <option value="">--select--</option>
+                        <option value="Available">Available</option>
+                        <option value="Full">Full</option>
+                        <option value="Overcrowded">Overcrowded</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" @onclick="SearchRoom">
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"> Search </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="float-right">
+    <div class="row">
+        <div class="mr-2 my-1">
+            <DownloadDropdown Data="GetData" FileName="rooms"></DownloadDropdown>
+        </div>
+        <AuthorizeView Roles="admin">
+            <div class="mr-3 my-1">
+                <a class="btn btn-primary" href="AddRoom">
+                    <span class="oi oi-plus" aria-hidden="true"> Add New </span>
+                </a>
+            </div>
+        </AuthorizeView>
+    </div>
+</div>
+
+<table class="table my-2">
+    <thead>
+        <tr>
+            <th class="mx-auto">Room Number</th>
+            <th class="mx-auto">Room Status</th>
+            <AuthorizeView Roles="admin">
+                <th>Action</th>
+            </AuthorizeView>
+        </tr>
+    </thead>
+    <tbody>
+        @if (room is null)
+        {
+            <tr>
+                <td colspan="3" align="center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </td>
+            </tr>
+        }
+        else if (count == 0)
+        {
+            <tr>
+                <td colspan="3" align="center">
+                    <p><em>No Data</em></p>
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in room)
+            {
+                var roomStatus = @item.RoomStatus;
+                <tr>
+                    <td class="mx-auto">
+                        <a class="nav-link" href="ViewRoom/@item.RoomNumber">
+                            <b>@item.RoomNumber</b>
+                        </a>
+                    </td>
+                    
+                    <td class="mx-auto" style="color : @GetColor(roomStatus);"><b>@item.RoomStatus</b></td>
+                    <AuthorizeView Roles="admin">
+                        <td>
+                            <span>
+                                <a class="btn btn-info my-1" href="EditRoom/@item.RoomNumber">
+                                    <span class="oi oi-pencil" aria-hidden="true"> Edit </span>
+                                </a>
+                                <a class="btn btn-danger my-1" href="DeleteRoom/@item.RoomNumber">
+                                    <span class="oi oi-trash" aria-hidden="true"> Delete </span>
+                                </a>
+                            </span>
+                        </td>
+                    </AuthorizeView>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@if (room is not null)
+{
+    <Pagination Skip="skip" Top="top" ViewCount="room.Count" TotalCount="count" GetPage="GetPage" Change="Change"></Pagination>
+}
+
+@code {
+    private RoomSearch roomScreen = new RoomSearch();
+    private RoomSearch roomSearch = new RoomSearch();
+    private List<RoomView> room;
+
+    private int skip = 0;
+    private int top = 10;
+    private int count = 0;
+
+    private bool showSearch = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await roomService.GetRoomsAsync(0, top, roomSearch);
+        count = response.count;
+        room = response.room;
+    }
+
+    async Task GetPage(int page)
+    {
+        skip = (page - 1) * top;
+
+        var response = await roomService.GetRoomsAsync(skip, top, roomSearch);
+        count = response.count;
+        room = response.room;
+    }
+
+    async Task Change(ChangeEventArgs e)
+    {
+        top = int.Parse(e.Value.ToString());
+        await GetPage(1);
+    }
+
+    async Task SearchRoom()
+    {
+        skip = 0;
+        count = 0;
+        room = null;
+
+        roomSearch.Clone(roomScreen);
+
+        var response = await roomService.GetRoomsAsync(skip, top, roomSearch);
+        count = response.count;
+        room = response.room;
+    }
+
+    private async Task<byte[]> GetData()
+    {
+        var response = await roomService.GetRoomsAsync(0, 0, roomSearch);
+        return DownloadService.GenerateCSV<RoomView>(response.room);
+    }
+
+    private string GetColor(string status)
+    {
+        switch (status)
+        {
+            case "Available":
+                return "Green";
+            case "Closed":
+                return "Red";
+            case "Overcrowded":
+                return "Orange";
+            case "Full":
+                return "Blue";
+        }
+        return "";
+    }
+}

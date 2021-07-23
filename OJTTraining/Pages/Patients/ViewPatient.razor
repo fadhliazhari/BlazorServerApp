@@ -1,0 +1,51 @@
+﻿@page "/ViewPatient/{Id}"
+@attribute [Authorize]
+
+@using System.Globalization
+
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using OJTTraining.Data
+@using OJTTraining.Service
+@inject PatientService patientService
+@inject NavigationManager NavigationManager
+
+<h2>View Patient</h2>
+<hr />
+
+<div>
+    <div class="form-group">
+        <label for="PatientName" class="font-weight-bold">Patient Name:</label>
+        <label id="PatientName">@obj.PatientName</label>
+    </div>
+    <div class="form-group">
+        <label for="RoomNumber" class="font-weight-bold">Room Number:</label>
+        <label id="RoomNumber">@obj.RoomNumber</label>
+    </div>
+    <div class="form-group">
+        <label for="CheckinDate" class="font-weight-bold">Checkin Date:</label>
+        <label id="CheckinDate">@obj.CheckinDate.ToString("g", CultureInfo.CurrentCulture)</label>
+    </div>
+    <div class="form-group">
+        <label for="CheckoutDate" class="font-weight-bold">Checkout Date:</label>
+        <label id="CheckoutDate">@obj.CheckoutDate?.ToString("g", CultureInfo.CurrentCulture)</label>
+    </div>
+
+    <button class="btn btn-secondary" @onclick="Cancel">Close</button>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Patient obj = new Patient();
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Task.Run(() => patientService.GetPatientAsync(Guid.Parse(Id)));
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Patients");
+    }
+}

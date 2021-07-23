@@ -1,0 +1,40 @@
+﻿@inject IJSRuntime js
+
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false"
+            @onclick="() => this.showDownload = !this.showDownload"
+            @onblur="DownloadOutFocus">
+        <span class="oi oi-data-transfer-download" aria-hidden="true"> Download </span>
+    </button>
+    <div class="dropdown-menu @(showDownload? "show":"")">
+        <a class="dropdown-item" type="button" @onclick="DownloadExcel">
+            Excel
+        </a>
+        <a class="dropdown-item" type="button" @onclick="DownloadCSV">
+            CSV
+        </a>
+    </div>
+</div>
+
+@code {
+    private bool showDownload = false;
+
+    [Parameter] public Func<Task<byte[]>> Data { get; set; }
+    [Parameter] public string FileName { get; set; } = "data";
+
+    private async Task DownloadExcel()
+    {
+        await js.InvokeVoidAsync("saveAsFile", $"{FileName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx", Convert.ToBase64String(await Data.Invoke()));
+    }
+
+    private async Task DownloadCSV()
+    {
+        await js.InvokeVoidAsync("saveAsFile", $"{FileName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.csv", Convert.ToBase64String(await Data.Invoke()));
+    }
+
+    private async Task DownloadOutFocus()
+    {
+        await Task.Delay(200);
+        this.showDownload = false;
+    }
+}

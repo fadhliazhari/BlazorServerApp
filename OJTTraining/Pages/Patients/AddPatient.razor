@@ -1,0 +1,154 @@
+﻿@page "/AddPatient"
+@attribute [Authorize(Roles = "admin")]
+
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using OJTTraining.Data
+@using OJTTraining.Service
+@inject PatientService patientService
+@inject RoomService roomService
+@inject NavigationManager NavigationManager
+
+<h2>Add Patient</h2>
+<hr />
+
+<EditForm EditContext="@editContext" OnValidSubmit="@CreatePatient">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="PatientName">Patient Name<span style="color : red;">*</span>:</label>
+        <InputText id="PatientName" @bind-Value="obj.PatientName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="RoomNumber">Room Number<span style="color : red;">*</span>:</label>
+        <RoomDropdown id="RoomNumber" @bind-Value="obj.RoomNumber"></RoomDropdown>
+    </div>
+    <div class="form-group">
+        <label for="CheckinDate">Checkin Date<span style="color : red;">*</span>:</label>
+        <div id="CheckinDate" class="form-row">
+            <div class="col-md-8">
+                <input type="date" @bind="obj.CheckinDate" class="form-control @checkinDateClass" />
+            </div>
+            <div class="col-md-4">
+                <input type="time" @bind="obj.CheckinDate" class="form-control @checkinDateClass" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="CheckoutDate">Checkout Date:</label>
+        <div id="CheckoutDate" class="form-row">
+            <div class="col-md-8">
+                <input type="date" @bind="obj.CheckoutDate" class="form-control @checkoutDateClass" />
+            </div>
+            <div class="col-md-4">
+                <input type="time" @bind="obj.CheckoutDate" class="form-control @checkoutDateClass" />
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+    <button class="btn btn-secondary" @onclick="Cancel" type="button">Cancel</button>
+</EditForm>
+
+@code {
+    Patient obj = new Patient();
+
+    private EditContext editContext;
+    private ValidationMessageStore messageStore;
+
+    private string checkinDateClass = "";
+    private string checkoutDateClass = "";
+
+    protected override void OnInitialized()
+    {
+        obj.CheckinDate = DateTime.Now;
+
+        editContext = new(obj);
+        editContext.OnValidationRequested += HandleValidationRequested;
+        messageStore = new(editContext);
+    }
+
+    void HandleValidationRequested(object sender, ValidationRequestedEventArgs args)
+    {
+        messageStore.Clear();
+
+        if (obj.CheckoutDate != null && obj.CheckoutDate < obj.CheckinDate)
+        {
+            messageStore.Add(() => obj.CheckoutDate, "Checkout Date should be later than Checkin Date");
+        }
+
+        FieldIdentifier fieldIdentifier = editContext.Field("CheckoutDate");
+        bool isCheckoutDateValid = !editContext.GetValidationMessages(fieldIdentifier).Any();
+
+        if (isCheckoutDateValid)
+        {
+            checkoutDateClass = "modified valid";
+        }
+        else
+        {
+            checkoutDateClass = "invalid";
+        }
+
+        FieldIdentifier checkinDate = editContext.Field("CheckinDate");
+        bool isCheckinDateValid = !editContext.GetValidationMessages(checkinDate).Any();
+
+        if (isCheckinDateValid)
+        {
+            checkinDateClass = "modified valid";
+        }
+        else
+        {
+            checkinDateClass = "invalid";
+        }
+
+        editContext.NotifyValidationStateChanged();
+    }
+
+    protected async void CreatePatient()
+    {
+        if (obj.RoomNumber != null && !obj.RoomNumber.Equals(""))
+        {
+            var roomNumber = await roomService.CheckIfAvailableAsync(obj.RoomNumber);
+
+            if (roomNumber.Equals(""))
+            {
+                messageStore.Add(() => obj.RoomNumber, "Room is not available");
+            }
+            else
+            {
+                obj.RoomNumber = roomNumber;
+            }
+        }
+
+        editContext.NotifyValidationStateChanged();
+
+        var isValid = !editContext.GetValidationMessages().Any();
+
+        if (isValid)
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            obj.RegisterDateTime = DateTime.Now;
+            obj.RegisterPIC = user.Identity.Name;
+            obj.UpdateDateTime = DateTime.Now;
+            obj.UpdatePIC = user.Identity.Name;
+            obj.IsDeleted = false;
+
+            await patientService.InsertPatientAsync(obj);
+            NavigationManager.NavigateTo("Patients");
+        }
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Patients");
+    }
+
+    public void Dispose()
+    {
+        editContext.OnValidationRequested -= HandleValidationRequested;
+    }
+}
