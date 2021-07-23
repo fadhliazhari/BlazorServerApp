@@ -21,7 +21,7 @@ namespace OJTTraining.Service
         #endregion
 
         #region Get List of Patients
-        public async Task<PatientModel> GetPatientsAsync(int skip, int top, PatientSearch searchPatient, bool? exactMatchRoomNumber = false)
+        public async Task<PatientModel> GetPatientsAsync(int skip, int top, PatientSearch searchPatient)
         {
             Expression<Func<Patient, bool>> whereExpression = null;
 
@@ -33,7 +33,7 @@ namespace OJTTraining.Service
             if (searchPatient is not null && !string.IsNullOrEmpty(searchPatient.RoomNumber))
             {
                 Expression<Func<Patient, bool>> e1 = null;
-                if (exactMatchRoomNumber.Value)
+                if (searchPatient.ExactMatch)
                 {
                     e1 = patient => patient.RoomNumber.ToLower().Equals(searchPatient.RoomNumber.ToLower());
                 }

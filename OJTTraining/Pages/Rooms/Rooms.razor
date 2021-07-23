@@ -43,7 +43,7 @@
 <div class="float-right">
     <div class="row">
         <div class="mr-2 my-1">
-            <DownloadDropdown Data="GetData" FileName="rooms"></DownloadDropdown>
+            <DownloadDropdown CsvData="GetCsvData" ExcelData="GetExcelData" FileName="rooms"></DownloadDropdown>
         </div>
         <AuthorizeView Roles="admin">
             <div class="mr-3 my-1">
@@ -165,10 +165,16 @@
         room = response.room;
     }
 
-    private async Task<byte[]> GetData()
+    private async Task<byte[]> GetCsvData()
     {
         var response = await roomService.GetRoomsAsync(0, 0, roomSearch);
         return DownloadService.GenerateCSV<RoomView>(response.room);
+    }
+
+    private async Task<byte[]> GetExcelData()
+    {
+        var response = await roomService.GetRoomsAsync(0, 0, roomSearch);
+        return DownloadService.GenerateExcel<RoomView>(response.room);
     }
 
     private string GetColor(string status)

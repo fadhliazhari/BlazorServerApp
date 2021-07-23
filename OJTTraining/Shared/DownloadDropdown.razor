@@ -19,17 +19,18 @@
 @code {
     private bool showDownload = false;
 
-    [Parameter] public Func<Task<byte[]>> Data { get; set; }
+    [Parameter] public Func<Task<byte[]>> CsvData { get; set; }
+    [Parameter] public Func<Task<byte[]>> ExcelData { get; set; }
     [Parameter] public string FileName { get; set; } = "data";
 
     private async Task DownloadExcel()
     {
-        await js.InvokeVoidAsync("saveAsFile", $"{FileName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx", Convert.ToBase64String(await Data.Invoke()));
+        await js.InvokeVoidAsync("saveAsFile", $"{FileName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx", Convert.ToBase64String(await ExcelData.Invoke()));
     }
 
     private async Task DownloadCSV()
     {
-        await js.InvokeVoidAsync("saveAsFile", $"{FileName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.csv", Convert.ToBase64String(await Data.Invoke()));
+        await js.InvokeVoidAsync("saveAsFile", $"{FileName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.csv", Convert.ToBase64String(await CsvData.Invoke()));
     }
 
     private async Task DownloadOutFocus()

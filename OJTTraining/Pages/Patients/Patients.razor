@@ -78,7 +78,7 @@
 <div class="float-right">
     <div class="row">
         <div class="mr-2 my-1">
-            <DownloadDropdown Data="GetData" FileName="patients"></DownloadDropdown>
+            <DownloadDropdown CsvData="GetCsvData" ExcelData="GetExcelData" FileName="patients"></DownloadDropdown>
         </div>
         <AuthorizeView Roles="admin">
             <div class="mr-3 my-1">
@@ -169,14 +169,13 @@
     private int totalPage { get { return (int)Math.Ceiling((float)count / top); } }
 
     private bool showSearch = false;
-    private bool exactMatch = false;
 
     private int match
     {
-        get { return exactMatch ? 1 : 0; }
+        get { return patientScreen.ExactMatch ? 1 : 0; }
         set
         {
-            exactMatch = value == 1;
+            patientScreen.ExactMatch = value == 1;
         }
     }
 
@@ -189,7 +188,7 @@
         }
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("roomNumber", out var roomNumber))
         {
-            exactMatch = true;
+            patientScreen.ExactMatch = true;
             patientScreen.RoomNumber = roomNumber;
         }
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("checkinBy", out var checkinDate))
@@ -216,7 +215,7 @@
     {
         skip = (page - 1) * top;
 
-        var response = await patientService.GetPatientsAsync(skip, top, patientSearch, exactMatch);
+        var response = await patientService.GetPatientsAsync(skip, top, patientSearch);
         count = response.count;
         patient = response.patient;
     }
@@ -235,20 +234,26 @@
 
         patientSearch.Clone(patientScreen);
 
-        var response = await patientService.GetPatientsAsync(skip, top, patientSearch, exactMatch);
+        var response = await patientService.GetPatientsAsync(skip, top, patientSearch);
         count = response.count;
         patient = response.patient;
     }
 
-    private async Task<byte[]> GetData()
+    private async Task<byte[]> GetExcelData()
     {
-        var response = await patientService.GetPatientsAsync(0, 0, patientSearch, exactMatch);
+        var response = await patientService.GetPatientsAsync(0, 0, patientSearch);
+        return DownloadService.GenerateExcel<PatientView>(ConvertFrom(response.patient));
+    }
+
+    private async Task<byte[]> GetCsvData()
+    {
+        var response = await patientService.GetPatientsAsync(0, 0, patientSearch);
         return DownloadService.GenerateCSV<PatientView>(ConvertFrom(response.patient));
     }
 
     private List<PatientView> ConvertFrom(List<Patient> patient)
     {
-        return patient.ConvertAll<PatientView>(
+        var result =  patient.ConvertAll<PatientView>(
             delegate (Patient patient)
             {
                 return new PatientView
@@ -259,5 +264,6 @@
                     CheckoutDate = patient.CheckoutDate
                 };
             });
+        return result;
     }
 }

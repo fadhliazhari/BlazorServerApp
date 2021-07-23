@@ -10,12 +10,27 @@ namespace OJTTraining.Service
 {
     public static class DownloadService
     {
-        public static byte[] GenerateExcelWorkbook<T>(IEnumerable<T> list)
+        public static byte[] GenerateExcel<T>(IEnumerable<T> list)
         {
             using var stream = new MemoryStream();
             using var package = new ExcelPackage(stream);
             var workSheet = package.Workbook.Worksheets.Add("Sheet1");
             workSheet.Cells.LoadFromCollection(list, true);
+
+            var properties = typeof(T).GetProperties();
+
+            for (int i = 0; i < properties.Length; i++)
+            {
+                if (properties[i].PropertyType == typeof(DateTime) || properties[i].PropertyType == typeof(DateTime?))
+                {
+                    var dateTimeString = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern;
+                    var amPMString = CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator + "/" + CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator;
+                    workSheet.Column(i + 1).Style.Numberformat.Format = dateTimeString.Replace("tt", amPMString);
+                }
+            }
+
+            workSheet.Cells[workSheet.Dimension.Address].AutoFitColumns();
+
             return package.GetAsByteArray();
         }
 
@@ -60,6 +75,10 @@ namespace OJTTraining.Service
                         {
                             DateTime? valueDateTime2 = (DateTime?)value;
                             return valueDateTime2?.ToString("g", CultureInfo.CurrentCulture);
+                        }
+                        else if (n.PropertyType == typeof(string))
+                        {
+                            return "\"" + value.ToString() + "\"";
                         }
                         else
                         {

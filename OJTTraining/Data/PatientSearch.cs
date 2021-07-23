@@ -10,6 +10,7 @@ namespace OJTTraining.Data
         public DateTime? CheckinDateEnd { get; set; }
         public DateTime? CheckoutDateStart { get; set; }
         public DateTime? CheckoutDateEnd { get; set; }
+        public bool ExactMatch { get; set; }
         public PatientSearch Clone(PatientSearch fromPatient)
         {
             this.PatientName = fromPatient.PatientName;
@@ -18,6 +19,7 @@ namespace OJTTraining.Data
             this.CheckinDateEnd = fromPatient.CheckinDateEnd;
             this.CheckoutDateStart = fromPatient.CheckoutDateStart;
             this.CheckoutDateEnd = fromPatient.CheckoutDateEnd;
+            this.ExactMatch = fromPatient.ExactMatch;
 
             return this;
         }
