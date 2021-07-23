@@ -11,9 +11,6 @@ deploy_job:
   stage: deploy
   script:
     - 'dotnet publish -c Release /p:PublishProfile=OJTTraining/Properties/PublishProfiles/IISProfile.pubxml $DEPLOY_PASSWORD' # deploy web application to server
-  environment:
-    name: staging
-    url: http://10.164.60.180/
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   dependencies:
