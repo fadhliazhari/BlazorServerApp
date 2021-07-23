@@ -4,4 +4,4 @@ stages:
 build_job:
   stage: build
   script:
-    - '& dotnet build'  # build the web application
+    - 'dotnet build'  # build the web application
