@@ -6,6 +6,8 @@ A live version of this application is available [here](http://10.164.60.180/).
 
 You need the company VPN connection in order to access the website.
 
+This project require Visual Studio 2019 to develop.
+
 # Database
 
 ## Shared Database
