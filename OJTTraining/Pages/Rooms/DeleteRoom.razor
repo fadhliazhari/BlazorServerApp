@@ -22,11 +22,11 @@
     }
 
     <div class="form-group">
-        <label for="RoomNumber">Room Number:</label>
+        <label for="RoomNumber" class="font-weight-bold">Room Number:</label>
         <label id="RoomNumber">@obj.RoomNumber</label>
     </div>
     <div class="form-group">
-        <label for="RoomCapacity">Room Capacity:</label>
+        <label for="RoomCapacity" class="font-weight-bold">Room Capacity:</label>
         <label id="RoomCapacity">@obj.RoomCapacity</label>
     </div>
     <div class="form-group">
@@ -63,28 +63,26 @@
         obj = await Task.Run(() => roomService.GetRoomAsync(Id));
 
         editContext = new(obj);
-        editContext.OnValidationRequested += HandleValidationRequested;
         messageStore = new(editContext);
 
         noOfPatients = await roomService.GetNoUsedAsync(obj);
         queryString = $"Patients?roomNumber={obj.RoomNumber}&checkinBy={DateTime.Now.ToString("d", CultureInfo.CurrentCulture)}&checkoutBefore={DateTime.Now.ToString("d", CultureInfo.CurrentCulture)}";
     }
 
-    async void HandleValidationRequested(object sender, ValidationRequestedEventArgs args)
+    async Task Delete()
     {
         messageStore.Clear();
 
-        if (await roomService.CheckIfUsedAsync(obj))
+        var isUsed = await roomService.CheckIfUsedAsync(obj);
+
+        if (isUsed)
         {
             messageStore.Add(() => obj.RoomNumber, "Room is currently being used");
         }
 
         editContext.NotifyValidationStateChanged();
-    }
 
-    void Delete()
-    {
-        if (editContext.Validate())
+        if (!isUsed)
         {
             DeleteDialog.Open();
         }
@@ -99,10 +97,5 @@
     void Cancel()
     {
         NavigationManager.NavigateTo("Rooms");
-    }
-
-    public void Dispose()
-    {
-        editContext.OnValidationRequested -= HandleValidationRequested;
     }
 }
