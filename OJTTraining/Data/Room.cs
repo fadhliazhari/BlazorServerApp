@@ -13,7 +13,7 @@ namespace OJTTraining.Data
         [Required]
         public int RoomCapacity { get; set; }
         [DefaultValue("LOCALTIMESTAMP(0)")]
-        public DateTime? RegisterDateTime { get; set; }
+        public DateTime RegisterDateTime { get; set; }
         public string RegisterPIC { get; set; }
         public DateTime? UpdateDateTime { get; set; }
         public string UpdatePIC { get; set; }

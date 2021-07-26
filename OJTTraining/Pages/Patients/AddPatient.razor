@@ -133,8 +133,6 @@
 
             obj.RegisterDateTime = DateTime.Now;
             obj.RegisterPIC = user.Identity.Name;
-            obj.UpdateDateTime = DateTime.Now;
-            obj.UpdatePIC = user.Identity.Name;
             obj.IsDeleted = false;
 
             await patientService.InsertPatientAsync(obj);
