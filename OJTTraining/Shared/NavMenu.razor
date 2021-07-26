@@ -20,7 +20,7 @@
                 <div class="dropdown-divider"></div>
             </li>
             <li class="nav-item px-3 dropdown @(expandHospitalNav?"show":"")">
-                <NavLink id="navbarDropdown" class="nav-link" @onmousedown="ToggleHospNavMenu" onclick="event.stopPropagation()">
+                <NavLink id="navbarDropdown" class="nav-link" @onclick="ToggleHospNavMenu">
                     <span class="oi oi-medical-cross" aria-hidden="true"></span> Hospital
                     @if (expandHospitalNav)
                     {
@@ -34,23 +34,23 @@
             </li>
             @if (expandHospitalNav)
             {
-                <div class="mt-0 mb-2" style="background-color:darkslateblue">
+                <li class="nav-item pb-0" style="background-color:darkslateblue">
                     <ul class="nav flex-column">
-                        <li class="nav-item px-4 py-1">
+                        <li class="nav-item px-4">
                             <NavLink class="nav-link" href="patients">
                                 <span class="oi oi-people" aria-hidden="true"></span> Patients
                             </NavLink>
                         </li>
                         @if (isInfra)
                         {
-                            <li class="nav-item px-4 py-1">
+                            <li class="nav-item px-4">
                                 <NavLink class="nav-link" href="rooms">
                                     <span class="oi oi-home" aria-hidden="true"></span> Rooms
                                 </NavLink>
                             </li>
                         }
                     </ul>
-                </div>
+                </li>
             }
         </AuthorizeView>
     </ul>
