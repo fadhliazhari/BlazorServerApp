@@ -10,6 +10,6 @@ build_job:
 test_job:
   stage: test
   script:
-    - 'dotnet test -c Release'  # build the web application
+    - 'dotnet test -c Release'  # test the web application
   dependencies:
     - build_job
