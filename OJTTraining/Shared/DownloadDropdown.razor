@@ -26,12 +26,18 @@
 
     private async Task DownloadExcel()
     {
-        await js.InvokeVoidAsync("saveAsFile", $"{FileName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx", Convert.ToBase64String(await ExcelData.Invoke()));
+        if (ExcelData != null)
+        {
+            await js.InvokeVoidAsync("saveAsFile", $"{FileName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx", Convert.ToBase64String(await ExcelData.Invoke()));
+        }
     }
 
     private async Task DownloadCSV()
     {
-        await js.InvokeVoidAsync("saveAsFile", $"{FileName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.csv", Convert.ToBase64String(await CsvData.Invoke()));
+        if (CsvData != null)
+        {
+            await js.InvokeVoidAsync("saveAsFile", $"{FileName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.csv", Convert.ToBase64String(await CsvData.Invoke()));
+        }
     }
 
     private async Task DownloadOutFocus()
