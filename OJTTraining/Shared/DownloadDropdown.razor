@@ -1,17 +1,18 @@
 ﻿@inject IJSRuntime js
 
 <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false"
+    <button class="btn btn-secondary dropdown-toggle"
+            data-toggle="dropdown" aria-expanded="@(showDownload? "true":"false")"
             @onclick="() => this.showDownload = !this.showDownload"
             @onblur="DownloadOutFocus">
         <span class="oi oi-data-transfer-download" aria-hidden="true"> Download </span>
     </button>
     <div class="dropdown-menu @(showDownload? "show":"")">
         <a class="dropdown-item" type="button" @onclick="DownloadExcel">
-            Excel
+            <span class="oi oi-spreadsheet" aria-hidden="true"> Excel </span>
         </a>
         <a class="dropdown-item" type="button" @onclick="DownloadCSV">
-            CSV
+            <span class="oi oi-document" aria-hidden="true"> CSV </span>
         </a>
     </div>
 </div>
