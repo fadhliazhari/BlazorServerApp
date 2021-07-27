@@ -1,11 +1,10 @@
-using System;
-using Xunit;
-using OJTTraining.Shared;
 using Bunit;
-using System.Threading.Tasks;
-using System.Diagnostics;
+using OJTTraining.Shared;
+using System;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace OJTTrainingTest
 {
@@ -94,6 +93,7 @@ namespace OJTTrainingTest
             // Act
             var dropdown = RenderComponent<DownloadDropdown>();
 
+            // Assert before click
             Assert.False(bool.Parse(dropdown.Find("button").GetAttribute("aria-expanded")),
                 "aria-expanded should be false before dropdown click");
             Assert.False(dropdown.FindAll("div")[1].ClassList.Contains("show"),
@@ -102,6 +102,7 @@ namespace OJTTrainingTest
             // Click dropdown button
             dropdown.Find("button").Click();
 
+            // Assert after click
             Assert.True(bool.Parse(dropdown.Find("button").GetAttribute("aria-expanded")),
                 "aria-expanded should be true after dropdown click");
             Assert.True(dropdown.FindAll("div")[1].ClassList.Contains("show"),
@@ -111,6 +112,7 @@ namespace OJTTrainingTest
             dropdown.Find("button").Blur();
             Thread.Sleep(300);
 
+            // Assert after lose focus
             Assert.False(bool.Parse(dropdown.Find("button").GetAttribute("aria-expanded")),
                 "aria-expanded should be false after lose focus");
             Assert.False(dropdown.FindAll("div")[1].ClassList.Contains("show"),
@@ -122,11 +124,12 @@ namespace OJTTrainingTest
         {
             var dropdown = RenderComponent<DownloadDropdown>();
 
+            // Check all button function properly
             dropdown.FindAll("a")[0].Click();
             dropdown.FindAll("a")[1].Click();
         }
 
-            [Fact]
+        [Fact]
         public void ExcelButtonTest()
         {
             // Parameters
@@ -151,6 +154,7 @@ namespace OJTTrainingTest
 
             dropdown.FindAll("a")[0].Click();
 
+            // Assert
             Assert.Single(plannedInvocation.Invocations);
         }
 
@@ -177,10 +181,9 @@ namespace OJTTrainingTest
             var fullFileName = $"{fileName}_{ DateTime.Now.ToString("yyyyMMdd_HHmmss")}.csv";
             var plannedInvocation = JSInterop.SetupVoid("saveAsFile", fullFileName, Convert.ToBase64String(testBytes));
 
-            var csv = dropdown.FindAll("a")[1];
+            dropdown.FindAll("a")[1].Click();
 
-            csv.Click();
-
+            // Assert
             Assert.Single(plannedInvocation.Invocations);
         }
     }

@@ -1,7 +1,6 @@
 ﻿@page "/DeletePatient/{Id}"
 @attribute [Authorize(Roles = "admin")]
 
-@using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -34,26 +33,34 @@
     <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
 </div>
 
-<DeleteConfirmationDialog @ref="DeleteDialog" OnConfirm="DeleteCallback"></DeleteConfirmationDialog>
-
 @code {
-    [Parameter]
-    public string Id { get; set; }
-    Patient obj = new Patient();
+    [CascadingParameter] public IModalService Modal { get; set; }
 
-    private DeleteConfirmationDialog DeleteDialog { get; set; }
+    [Parameter] public string Id { get; set; }
+
+    private Patient obj = new Patient();
 
     protected override async Task OnInitializedAsync()
     {
         obj = await Task.Run(() => patientService.GetPatientAsync(Guid.Parse(Id)));
     }
 
-    void Delete()
+    protected async Task Delete()
     {
-        DeleteDialog.Open();
+        var options = new ModalOptions()
+        {
+            Animation = ModalAnimation.FadeInOut(0.1)
+        };
+
+        var deleteDialog = Modal.Show<DeleteConfirmation>("Delete", options);
+        var result = await deleteDialog.Result;
+
+        if (!result.Cancelled) {
+            await DeleteCallback();
+        }
     }
 
-    protected async void DeleteCallback()
+    protected async Task DeleteCallback()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
@@ -66,7 +73,7 @@
         NavigationManager.NavigateTo("Patients");
     }
 
-    void Cancel()
+    protected void Cancel()
     {
         NavigationManager.NavigateTo("Patients");
     }

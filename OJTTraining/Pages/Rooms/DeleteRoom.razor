@@ -42,11 +42,10 @@
     <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
 </div>
 
-<DeleteConfirmationDialog @ref="DeleteDialog" OnConfirm="DeleteCallback"></DeleteConfirmationDialog>
-
 @code {
-    [Parameter]
-    public string Id { get; set; }
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public string Id { get; set; }
 
     private Room obj = new Room();
 
@@ -55,8 +54,6 @@
 
     private EditContext editContext;
     private ValidationMessageStore messageStore;
-
-    private DeleteConfirmationDialog DeleteDialog { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -69,7 +66,7 @@
         queryString = $"Patients?roomNumber={obj.RoomNumber}&checkinBy={DateTime.Now.ToString("d", CultureInfo.CurrentCulture)}&checkoutBefore={DateTime.Now.ToString("d", CultureInfo.CurrentCulture)}";
     }
 
-    async Task Delete()
+    protected async Task Delete()
     {
         messageStore.Clear();
 
@@ -84,7 +81,18 @@
 
         if (!isUsed)
         {
-            DeleteDialog.Open();
+            var options = new ModalOptions()
+            {
+                Animation = ModalAnimation.FadeInOut(0.1)
+            };
+
+            var deleteDialog = Modal.Show<DeleteConfirmation>("Delete", options);
+            var result = await deleteDialog.Result;
+
+            if (!result.Cancelled)
+            {
+                await DeleteCallback();
+            }
         }
     }
 
@@ -94,7 +102,7 @@
         NavigationManager.NavigateTo("Rooms");
     }
 
-    void Cancel()
+    protected void Cancel()
     {
         NavigationManager.NavigateTo("Rooms");
     }
