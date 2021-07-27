@@ -11,5 +11,4 @@ test_job:
   stage: test
   script:
     - 'dotnet test -c Release'  # test the web application
-  dependencies:
-    - build_job
+  needs: ["build_job"]
