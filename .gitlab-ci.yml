@@ -1,8 +1,14 @@
 stages:
   - build
-  - deploy
+  - test
 
 build_job:
   stage: build
   script:
-    - 'dotnet build'  # build the web application
+    - 'dotnet build -c Release'  # build the web application
+
+test_job:
+  stage: test
+  script:
+    - 'dotnet test -c Release'  # test the web application
+  needs: ["build_job"]
