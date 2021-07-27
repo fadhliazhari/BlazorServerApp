@@ -108,7 +108,7 @@ namespace OJTTraining.Service
         #endregion
 
         #region Get Room by Id
-        public async Task<Room> GetRoomAsync(String Id)
+        public async Task<Room> GetRoomAsync(string Id)
         {
             Room Room = await _appDBContext.Rooms.FirstOrDefaultAsync(c => c.RoomNumber.Equals(Id));
             return Room;
