@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OJTTraining", "OJTTraining\OJTTraining.csproj", "{98B00975-2D2A-46AE-8858-6358BE4270D3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OJTTrainingTest", "OJTTrainingTest\OJTTrainingTest.csproj", "{26CE0A39-C940-4912-9583-E23F265BA28E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{98B00975-2D2A-46AE-8858-6358BE4270D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98B00975-2D2A-46AE-8858-6358BE4270D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98B00975-2D2A-46AE-8858-6358BE4270D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26CE0A39-C940-4912-9583-E23F265BA28E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26CE0A39-C940-4912-9583-E23F265BA28E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26CE0A39-C940-4912-9583-E23F265BA28E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26CE0A39-C940-4912-9583-E23F265BA28E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
