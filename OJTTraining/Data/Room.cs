@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace OJTTraining.Data
@@ -12,10 +11,11 @@ namespace OJTTraining.Data
         public string RoomNumber { get; set; }
         [Required]
         public int RoomCapacity { get; set; }
-        [DefaultValue("LOCALTIMESTAMP(0)")]
         public DateTime RegisterDateTime { get; set; }
+        [MaxLength(256)]
         public string RegisterPIC { get; set; }
         public DateTime? UpdateDateTime { get; set; }
+        [MaxLength(256)]
         public string UpdatePIC { get; set; }
     }
 }

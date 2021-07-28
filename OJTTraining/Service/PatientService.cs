@@ -76,7 +76,7 @@ namespace OJTTraining.Service
             var count = await patientQuery.CountAsync();
             var patient = await patientQuery.Skip(skip).Take(top == 0 ? count : top).ToListAsync();
 
-            return new PatientModel { count = count, patient = patient };
+            return new PatientModel { Count = count, Patients = patient };
         }
         #endregion
 

@@ -133,8 +133,8 @@
     protected override async Task OnInitializedAsync()
     {
         var response = await roomService.GetRoomsAsync(0, top, roomSearch);
-        count = response.count;
-        room = response.room;
+        count = response.Count;
+        room = response.Rooms;
     }
 
     async Task GetPage(int page)
@@ -142,8 +142,8 @@
         skip = (page - 1) * top;
 
         var response = await roomService.GetRoomsAsync(skip, top, roomSearch);
-        count = response.count;
-        room = response.room;
+        count = response.Count;
+        room = response.Rooms;
     }
 
     async Task Change(ChangeEventArgs e)
@@ -161,20 +161,20 @@
         roomSearch.Clone(roomScreen);
 
         var response = await roomService.GetRoomsAsync(skip, top, roomSearch);
-        count = response.count;
-        room = response.room;
+        count = response.Count;
+        room = response.Rooms;
     }
 
     private async Task<byte[]> GetCsvData()
     {
         var response = await roomService.GetRoomsAsync(0, 0, roomSearch);
-        return DownloadService.GenerateCSV<RoomView>(response.room);
+        return DownloadService.GenerateCSV<RoomView>(response.Rooms);
     }
 
     private async Task<byte[]> GetExcelData()
     {
         var response = await roomService.GetRoomsAsync(0, 0, roomSearch);
-        return DownloadService.GenerateExcel<RoomView>(response.room);
+        return DownloadService.GenerateExcel<RoomView>(response.Rooms);
     }
 
     private string GetColor(string status)

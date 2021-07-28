@@ -16,7 +16,7 @@ namespace OJTTraining.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.7")
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -241,7 +241,8 @@ namespace OJTTraining.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("RegisterPIC")
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
@@ -252,7 +253,8 @@ namespace OJTTraining.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UpdatePIC")
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("PatientGUID");
 
@@ -269,7 +271,8 @@ namespace OJTTraining.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("RegisterPIC")
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<int>("RoomCapacity")
                         .HasColumnType("integer");
@@ -278,7 +281,8 @@ namespace OJTTraining.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UpdatePIC")
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("RoomNumber");
 

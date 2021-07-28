@@ -1,12 +1,11 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace OJTTraining.Data
 {
     public class RoomModel
     {
-        public List<RoomView> room { get; set; }
+        public List<RoomView> Rooms { get; set; }
 
-        public int count { get; set; }
+        public int Count { get; set; }
     }
 }

@@ -1,12 +1,11 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace OJTTraining.Data
 {
     public class PatientModel
     {
-        public List<Patient> patient { get; set; }
+        public List<Patient> Patients { get; set; }
 
-        public int count { get; set; }
+        public int Count { get; set; }
     }
 }

@@ -216,8 +216,8 @@
         skip = (page - 1) * top;
 
         var response = await patientService.GetPatientsAsync(skip, top, patientSearch);
-        count = response.count;
-        patient = response.patient;
+        count = response.Count;
+        patient = response.Patients;
     }
 
     async Task Change(ChangeEventArgs e)
@@ -235,20 +235,20 @@
         patientSearch.Clone(patientScreen);
 
         var response = await patientService.GetPatientsAsync(skip, top, patientSearch);
-        count = response.count;
-        patient = response.patient;
+        count = response.Count;
+        patient = response.Patients;
     }
 
     private async Task<byte[]> GetExcelData()
     {
         var response = await patientService.GetPatientsAsync(0, 0, patientSearch);
-        return DownloadService.GenerateExcel<PatientView>(ConvertFrom(response.patient));
+        return DownloadService.GenerateExcel<PatientView>(ConvertFrom(response.Patients));
     }
 
     private async Task<byte[]> GetCsvData()
     {
         var response = await patientService.GetPatientsAsync(0, 0, patientSearch);
-        return DownloadService.GenerateCSV<PatientView>(ConvertFrom(response.patient));
+        return DownloadService.GenerateCSV<PatientView>(ConvertFrom(response.Patients));
     }
 
     private List<PatientView> ConvertFrom(List<Patient> patient)

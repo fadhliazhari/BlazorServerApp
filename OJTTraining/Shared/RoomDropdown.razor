@@ -73,8 +73,8 @@
         showDropdown = true;
         roomSearch.RoomNumber = newValue;
         var response = await roomService.GetRoomsAsync(0, maxCount, roomSearch);
-        dropDownList = response.room;
-        roomCount = response.count;
+        dropDownList = response.Rooms;
+        roomCount = response.Count;
     }
 
     private async Task More()
@@ -85,8 +85,8 @@
         maxCount = maxCount + 10;
         roomSearch.RoomNumber = CurrentValue;
         var response = await roomService.GetRoomsAsync(0, maxCount, roomSearch);
-        dropDownList = response.room;
-        roomCount = response.count;
+        dropDownList = response.Rooms;
+        roomCount = response.Count;
     }
 
     private async Task OutFocus()

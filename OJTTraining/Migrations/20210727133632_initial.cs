@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using System;
 
 namespace OJTTraining.Migrations
 {
@@ -45,6 +45,42 @@ namespace OJTTraining.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Patients",
+                columns: table => new
+                {
+                    PatientGUID = table.Column<Guid>(type: "uuid", nullable: false),
+                    PatientName = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    RoomNumber = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false),
+                    CheckinDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CheckoutDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    RegisterDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    RegisterPIC = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    UpdateDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    UpdatePIC = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Patients", x => x.PatientGUID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Rooms",
+                columns: table => new
+                {
+                    RoomNumber = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false),
+                    RoomCapacity = table.Column<int>(type: "integer", nullable: false),
+                    RegisterDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    RegisterPIC = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    UpdateDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    UpdatePIC = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rooms", x => x.RoomNumber);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,6 +225,16 @@ namespace OJTTraining.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new string[] { "Id", "Name", "NormalizedName", "ConcurrencyStamp" },
+                values: new string[] { "admin", "admin", "ADMIN", "8a596361-88f4-417b-a605-e4b398ed2ee2" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new string[] { "Id", "Name", "NormalizedName", "ConcurrencyStamp" },
+                values: new string[] { "infra", "infra", "INFRA", "c657259e-5e0f-4e19-bba3-982cf67894ab" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -207,6 +253,12 @@ namespace OJTTraining.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Patients");
+
+            migrationBuilder.DropTable(
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -16,30 +16,11 @@ namespace OJTTrainingTest
             // Act
             var dropdown = RenderComponent<DownloadDropdown>();
 
-            // Expected output
-            string expectedHtml = @"
-                <div class='dropdown'>
-                    <button class='btn btn-secondary dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
-		                <span class='oi oi-data-transfer-download' aria-hidden='true'>
-			                Download
-                        </span>
-	                </button>
-	                <div class='dropdown-menu'>
-		                <a class='dropdown-item' type='button'>
-                            <span class='oi oi-spreadsheet' aria-hidden='true'>
-                                Excel
-                            </span>
-                        </a>
-		                <a class='dropdown-item' type='button'>
-			                <span class='oi oi-document' aria-hidden='true'>
-                                CSV
-                            </span>
-                        </a>
-	                </div>
-                </div>";
-
             // Assert
-            dropdown.MarkupMatches(expectedHtml);
+            Assert.True(dropdown.FindAll("div")[0].ClassList.Contains("dropdown"));
+            Assert.True(dropdown.FindAll("div")[1].ClassList.Contains("dropdown-menu"));
+            Assert.True(dropdown.FindAll("a")[0].ClassList.Contains("dropdown-item"));
+            Assert.True(dropdown.FindAll("a")[1].ClassList.Contains("dropdown-item"));
         }
 
         [Fact]
@@ -61,30 +42,11 @@ namespace OJTTrainingTest
                 .Add(parameter => parameter.ExcelData, ReturnEmpty);
             });
 
-            // Expected output
-            string expectedHtml = @"
-                <div class='dropdown'>
-                    <button class='btn btn-secondary dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
-		                <span class='oi oi-data-transfer-download' aria-hidden='true'>
-			                Download
-                        </span>
-	                </button>
-	                <div class='dropdown-menu'>
-		                <a class='dropdown-item' type='button'>
-			                <span class='oi oi-spreadsheet' aria-hidden='true'>
-                                Excel
-                            </span>
-                        </a>
-		                <a class='dropdown-item' type='button'>
-			                <span class='oi oi-document' aria-hidden='true'>
-                                CSV
-                            </span>
-                        </a>
-	                </div>
-                </div>";
-
             // Assert
-            dropdown.MarkupMatches(expectedHtml);
+            Assert.True(dropdown.FindAll("div")[0].ClassList.Contains("dropdown"));
+            Assert.True(dropdown.FindAll("div")[1].ClassList.Contains("dropdown-menu"));
+            Assert.True(dropdown.FindAll("a")[0].ClassList.Contains("dropdown-item"));
+            Assert.True(dropdown.FindAll("a")[1].ClassList.Contains("dropdown-item"));
         }
 
         [Fact]

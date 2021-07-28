@@ -94,7 +94,7 @@ namespace OJTTraining.Service
             var count = await finalQuery.CountAsync();
             var room = await finalQuery.Skip(skip).Take(top == 0 ? count : top).ToListAsync();
 
-            return new RoomModel { count = count, room = room };
+            return new RoomModel { Count = count, Rooms = room };
         }
         #endregion
 

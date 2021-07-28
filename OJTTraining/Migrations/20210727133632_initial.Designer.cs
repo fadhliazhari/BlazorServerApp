@@ -10,15 +10,15 @@ using OJTTraining.Data;
 namespace OJTTraining.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210702050732_patient")]
-    partial class patient
+    [Migration("20210727133632_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.7")
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -243,7 +243,8 @@ namespace OJTTraining.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("RegisterPIC")
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
@@ -254,7 +255,8 @@ namespace OJTTraining.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UpdatePIC")
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("PatientGUID");
 
@@ -267,23 +269,22 @@ namespace OJTTraining.Migrations
                         .HasMaxLength(4)
                         .HasColumnType("character varying(4)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("RegisterDateTime")
+                    b.Property<DateTime>("RegisterDateTime")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("RegisterPIC")
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("text");
+                    b.Property<int>("RoomCapacity")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdateDateTime")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UpdatePIC")
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("RoomNumber");
 
