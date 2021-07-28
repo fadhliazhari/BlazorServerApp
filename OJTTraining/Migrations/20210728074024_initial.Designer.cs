@@ -10,7 +10,7 @@ using OJTTraining.Data;
 namespace OJTTraining.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210727133632_initial")]
+    [Migration("20210728074024_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

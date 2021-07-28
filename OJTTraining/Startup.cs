@@ -10,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using OJTTraining.Areas.Identity;
 using OJTTraining.Data;
 using OJTTraining.Service;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OJTTraining
 {
@@ -39,6 +41,8 @@ namespace OJTTraining
                 options.Password.RequireUppercase = false;
             }).AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddControllers();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
@@ -49,6 +53,17 @@ namespace OJTTraining
             services.AddScoped<RoomService>();
 
             services.AddBlazoredModal();
+        }
+
+        private RequestLocalizationOptions GetLocalizationOptions() {
+            var cultures = Configuration.GetSection("Cultures")
+                    .GetChildren().ToDictionary(x => x.Key, x => x.Value);
+
+            var supportedCultures = cultures.Keys.ToArray();
+
+            return new RequestLocalizationOptions()
+                .AddSupportedCultures(supportedCultures)
+                .AddSupportedUICultures(supportedCultures);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +83,8 @@ namespace OJTTraining
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseRequestLocalization(GetLocalizationOptions());
 
             app.UseRouting();
 

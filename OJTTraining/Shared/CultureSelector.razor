@@ -1,0 +1,59 @@
+﻿@using  System.Globalization
+@inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+
+@if (supportedCultures is not null)
+{
+    <form class="form-inline">
+        <select id="cultureSelect" class="form-control mr-2" @bind="selectedCulture">
+            @foreach (var culture in supportedCultures)
+            {
+                <option value="@culture.Key">@culture.Value</option>
+            }
+        </select>
+    </form>
+}
+
+@code
+{
+    private string _selectedCulture;
+
+    private string selectedCulture
+    {
+        get => _selectedCulture;
+        set
+        {
+            if (!string.IsNullOrEmpty(value) && _selectedCulture != value)
+            {
+                _selectedCulture = value;
+
+                var uri = new Uri(NavigationManager.Uri)
+                    .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+                var cultureEscaped = Uri.EscapeDataString(value);
+                var uriEscaped = Uri.EscapeDataString(uri);
+
+                NavigationManager.NavigateTo(
+                    $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
+                    forceLoad: true);
+            }
+        }
+    }
+    private Dictionary<string, string> supportedCultures;
+
+    protected override void OnInitialized()
+    {
+        var currentCulture = CultureInfo.CurrentCulture.Name;
+
+        supportedCultures = Configuration.GetSection("Cultures")
+            .GetChildren().ToDictionary(x => x.Key, x => x.Value);
+
+        if (supportedCultures.ContainsKey(currentCulture))
+        {
+            _selectedCulture = currentCulture;
+        }
+        else
+        {
+            _selectedCulture = supportedCultures.First().Key;
+        }
+    }
+}

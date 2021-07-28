@@ -68,93 +68,95 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary" @onclick="() => SearchPatient()">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"> Search </span>
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Search
                 </button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="float-right">
-    <div class="row">
-        <div class="mr-2 my-1">
-            <DownloadDropdown CsvData="GetCsvData" ExcelData="GetExcelData" FileName="patients"></DownloadDropdown>
-        </div>
-        <AuthorizeView Roles="admin">
-            <div class="mr-3 my-1">
-                <a class="btn btn-primary" href="AddPatient">
-                    <span class="oi oi-plus" aria-hidden="true"> Add New </span>
-                </a>
-            </div>
-        </AuthorizeView>
-    </div>
-</div>
-
-<table class="table my-2">
-    <thead>
-        <tr>
-            <th>Patient Name</th>
-            <th>Room Number</th>
-            <th>Check In Date</th>
-            <th>Check Out Date</th>
-            <AuthorizeView Roles="admin">
-                <th>Action</th>
-            </AuthorizeView>
-        </tr>
-    </thead>
-    <tbody>
-        @if (patient is null)
-        {
-            <tr>
-                <td colspan="5" align="center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </td>
-            </tr>
-        }
-        else if (count == 0)
-        {
-            <tr>
-                <td colspan="5" align="center">
-                    <p><em>No Data</em></p>
-                </td>
-            </tr>
-        }
-        else
-        {
-            @foreach (var item in patient)
-            {
-                <tr>
-                    <td>
-                        <a class="nav-link" href="ViewPatient/@item.PatientGUID">
-                            <b>@item.PatientName</b>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row mx-0 my-1">
+            <div></div>
+            <div class="ml-auto mr-1"><DownloadDropdown CsvData="GetCsvData" ExcelData="GetExcelData" FileName="patients"></DownloadDropdown></div>
+            <div>
+                <AuthorizeView Roles="admin">
+                    <div class="">
+                        <a class="btn btn-primary" href="AddPatient">
+                            <span class="oi oi-plus" aria-hidden="true"></span> Add New
                         </a>
-                    </td>
-                    <td>@item.RoomNumber</td>
-                    <td>@item.CheckinDate.ToString("g", CultureInfo.CurrentCulture)</td>
-                    <td>@item.CheckoutDate?.ToString("g", CultureInfo.CurrentCulture)</td>
+                    </div>
+                </AuthorizeView>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <table class="table my-1">
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Room Number</th>
+                    <th>Checkin Date</th>
+                    <th>Checkout Date</th>
                     <AuthorizeView Roles="admin">
-                        <td>
-                            <span>
-                                <a class="btn btn-info my-1" href="EditPatient/@item.PatientGUID">
-                                    <span class="oi oi-pencil" aria-hidden="true"> Edit </span>
-                                </a>
-                                <a class="btn btn-danger my-1" href="DeletePatient/@item.PatientGUID">
-                                    <span class="oi oi-trash" aria-hidden="true"> Delete </span>
-                                </a>
-                            </span>
-                        </td>
+                        <th>Action</th>
                     </AuthorizeView>
                 </tr>
-            }
-        }
-    </tbody>
-</table>
-@if (patient is not null)
-{
-    <Pagination Skip="skip" Top="top" ViewCount="patient.Count" TotalCount="count" GetPage="GetPage" Change="Change"></Pagination>
-}
+            </thead>
+            <tbody>
+                @if (patient is null)
+                {
+                    <tr>
+                        <td colspan="5" align="center">
+                            <div class="spinner-border text-info" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                else if (count == 0)
+                {
+                    <tr>
+                        <td colspan="5" align="center">
+                            <p><em>No Data</em></p>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <Virtualize Items="@patient" Context="item">
+                        <tr>
+                            <td>
+                                <a class="nav-link" href="ViewPatient/@item.PatientGUID">
+                                    <b>@item.PatientName</b>
+                                </a>
+                            </td>
+                            <td>@item.RoomNumber</td>
+                            <td>@item.CheckinDate.ToString("g", CultureInfo.CurrentCulture)</td>
+                            <td>@item.CheckoutDate?.ToString("g", CultureInfo.CurrentCulture)</td>
+                            <AuthorizeView Roles="admin">
+                                <td>
+                                    <span>
+                                        <a class="btn btn-info my-1" href="EditPatient/@item.PatientGUID">
+                                            <span class="oi oi-pencil" aria-hidden="true"></span> Edit
+                                        </a>
+                                        <a class="btn btn-danger my-1" href="DeletePatient/@item.PatientGUID">
+                                            <span class="oi oi-trash" aria-hidden="true"></span> Delete
+                                        </a>
+                                    </span>
+                                </td>
+                            </AuthorizeView>
+                        </tr>
+                    </Virtualize>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <Pagination Skip="skip" Top="top" ViewCount="@(patient is null ? 0 : patient.Count)" TotalCount="count" GetPage="GetPage" Change="Change"></Pagination>
+    </div>
+</div>
 
 @code {
     private PatientSearch patientScreen = new PatientSearch();
@@ -253,7 +255,7 @@
 
     private List<PatientView> ConvertFrom(List<Patient> patient)
     {
-        var result =  patient.ConvertAll<PatientView>(
+        var result = patient.ConvertAll<PatientView>(
             delegate (Patient patient)
             {
                 return new PatientView

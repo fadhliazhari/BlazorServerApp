@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Shared.NavMenu> Localization
 @inject IAuthorizationService AuthorizationService
 
 <div class="top-row pl-4 navbar navbar-dark">
@@ -12,7 +14,7 @@
     <ul class="nav flex-column">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+                <span class="oi oi-home" aria-hidden="true"></span> @Localization["Home"]
             </NavLink>
         </li>
         <AuthorizeView>
@@ -20,16 +22,9 @@
                 <div class="dropdown-divider"></div>
             </li>
             <li class="nav-item px-3 dropdown @(expandHospitalNav?"show":"")">
-                <NavLink id="navbarDropdown" class="nav-link" @onclick="ToggleHospNavMenu">
-                    <span class="oi oi-medical-cross" aria-hidden="true"></span> Hospital
-                    @if (expandHospitalNav)
-                    {
-                        <span class="oi oi-caret-bottom ml-auto" aria-hidden="true"></span>
-                    }
-                    else
-                    {
-                        <span class="oi oi-caret-right ml-auto" aria-hidden="true"></span>
-                    }
+                <NavLink id="navbarDropdown" class="@(hospitalNavCss)" @onclick="ToggleHospNavMenu">
+                    <span class="oi oi-medical-cross" aria-hidden="true"></span> @Localization["Hospital"]
+                    <span class="oi oi-caret-@(expandHospitalNav?"bottom":"right") ml-auto" aria-hidden="true"></span>
                 </NavLink>
             </li>
             @if (expandHospitalNav)
@@ -38,14 +33,14 @@
                     <ul class="nav flex-column">
                         <li class="nav-item px-4">
                             <NavLink class="nav-link" href="patients">
-                                <span class="oi oi-people" aria-hidden="true"></span> Patients
+                                <span class="oi oi-people" aria-hidden="true"></span> @Localization["Patients"]
                             </NavLink>
                         </li>
                         @if (isInfra)
                         {
                             <li class="nav-item px-4">
                                 <NavLink class="nav-link" href="rooms">
-                                    <span class="oi oi-home" aria-hidden="true"></span> Rooms
+                                    <span class="oi oi-home" aria-hidden="true"></span> @Localization["Rooms"]
                                 </NavLink>
                             </li>
                         }
@@ -61,6 +56,10 @@
     private bool expandHospitalNav = false;
     private bool isInfra = false;
 
+    private string hospitalNavCss = "nav-link";
+
+    ElementReference hospitalNav;
+
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
@@ -73,6 +72,20 @@
         if (user.IsInRole("infra"))
         {
             isInfra = true;
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.Path, UriFormat.Unescaped);
+        if (uri.Contains("patients") || uri.Contains("rooms"))
+        {
+            expandHospitalNav = true;
+            hospitalNavCss = "nav-link active";
+        }
+        else
+        {
+            hospitalNavCss = "nav-link";
         }
     }
 

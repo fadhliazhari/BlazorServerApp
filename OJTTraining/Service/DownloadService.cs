@@ -24,12 +24,10 @@ namespace OJTTraining.Service
                 if (properties[i].PropertyType == typeof(DateTime) || properties[i].PropertyType == typeof(DateTime?))
                 {
                     var dateTimeString = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern;
-                    var amPMString = CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator + "/" + CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator;
-                    workSheet.Column(i + 1).Style.Numberformat.Format = dateTimeString.Replace("tt", amPMString);
+                    dateTimeString = $"[$-{CultureInfo.CurrentCulture.Name}]{dateTimeString.Replace("tt", "AM/PM")}";
+                    workSheet.Column(i + 1).Style.Numberformat.Format = dateTimeString;
                 }
             }
-
-            workSheet.Cells[workSheet.Dimension.Address].AutoFitColumns();
 
             return package.GetAsByteArray();
         }

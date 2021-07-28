@@ -11,6 +11,5 @@ namespace OJTTraining.Data
         }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Patient> Patients { get; set; }
-
     }
 }

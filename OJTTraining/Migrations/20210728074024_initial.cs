@@ -225,16 +225,6 @@ namespace OJTTraining.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new string[] { "Id", "Name", "NormalizedName", "ConcurrencyStamp" },
-                values: new string[] { "admin", "admin", "ADMIN", "8a596361-88f4-417b-a605-e4b398ed2ee2" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new string[] { "Id", "Name", "NormalizedName", "ConcurrencyStamp" },
-                values: new string[] { "infra", "infra", "INFRA", "c657259e-5e0f-4e19-bba3-982cf67894ab" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
