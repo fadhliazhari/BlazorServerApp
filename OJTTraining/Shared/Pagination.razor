@@ -14,13 +14,13 @@
         <ul class="pagination">
             <li class="page-item @(Top + Skip > Top ? "" : "disabled")"><button class="page-link" @onclick="Previous">Previous</button></li>
             <li class="page-item @(currentPage == 1 ? "active" : "")"><button class="page-link" @onclick="() => GetPage.InvokeAsync(1)">1</button></li>
-            @if (TotalCount > 0)
+            @if (totalPage > 0)
             {
-                @if (currentPage > 4 && totalPage > 7)
+                @if (currentPage > 4 && totalPage > 4)
                 {
                     <li class="page-item"><button class="page-link" @onclick="() => GetPage.InvokeAsync(currentPage - 3)">...</button></li>
                 }
-                else
+                else if (totalPage > 1)
                 {
                     <li class="page-item @(currentPage == 2 ? "active" : "")"><button class="page-link" @onclick="() => GetPage.InvokeAsync(2)">2</button></li>
                 }
@@ -39,16 +39,16 @@
                     }
                 }
 
-                @if (currentPage < totalPage - 3 && totalPage > 9)
+                @if (currentPage < totalPage - 3 && totalPage > 4)
                 {
                     <li class="page-item"><button class="page-link" @onclick="() => GetPage.InvokeAsync(currentPage + 3)">...</button></li>
                 }
-                else
+                else if (totalPage > 3)
                 {
                     <li class="page-item @(currentPage == totalPage - 1 ? "active" : "")"><button class="page-link" @onclick="() => GetPage.InvokeAsync(totalPage - 1)">@(totalPage - 1)</button></li>
                 }
-
-                if (TotalCount > 5)
+                
+                if (totalPage > 2)
                 {
                     <li class="page-item @(currentPage == totalPage ? "active" : "")"><button class="page-link" @onclick="() => GetPage.InvokeAsync(totalPage)">@totalPage</button></li>
                 }
