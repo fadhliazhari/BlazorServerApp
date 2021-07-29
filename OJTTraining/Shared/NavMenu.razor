@@ -32,14 +32,14 @@
                 <li class="nav-item pb-0" style="background-color:darkslateblue">
                     <ul class="nav flex-column">
                         <li class="nav-item px-4">
-                            <NavLink class="nav-link" href="patients">
+                            <NavLink class="nav-link" href="Patients" Match="NavLinkMatch.Prefix">
                                 <span class="oi oi-people" aria-hidden="true"></span> @Localization["Patients"]
                             </NavLink>
                         </li>
                         @if (isInfra)
                         {
                             <li class="nav-item px-4">
-                                <NavLink class="nav-link" href="rooms">
+                                <NavLink class="nav-link" href="Rooms" Match="NavLinkMatch.Prefix">
                                     <span class="oi oi-home" aria-hidden="true"></span> @Localization["Rooms"]
                                 </NavLink>
                             </li>
@@ -57,8 +57,6 @@
     private bool isInfra = false;
 
     private string hospitalNavCss = "nav-link";
-
-    ElementReference hospitalNav;
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }

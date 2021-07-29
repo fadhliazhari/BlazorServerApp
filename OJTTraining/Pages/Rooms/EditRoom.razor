@@ -1,5 +1,7 @@
-﻿@page "/EditRoom/{Id}"
+﻿@page "/Rooms/EditRoom/{Id}"
 @attribute [Authorize(Roles = "infra")]
+
+@inject IStringLocalizer<App> Localization
 
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -9,7 +11,7 @@
 @inject RoomService roomService
 @inject NavigationManager NavigationManager
 
-<h2>Update Room</h2>
+<h2>@Localization["Update Room"]</h2>
 <hr />
 
 <EditForm Model="obj" OnValidSubmit="UpdateRoom">
@@ -17,16 +19,16 @@
     <ValidationSummary />
 
     <div class="form-group">
-        <label for="RoomNumber">Room Number<span style="color : red;">*</span>:</label>
+        <label for="RoomNumber">@Localization["Room Number"]<span style="color : red;">@Localization["*"]</span>@Localization[":"]</label>
         <InputText id="RoomNumber" @bind-Value="obj.RoomNumber" class="form-control" />
     </div>
     <div class="form-group">
-        <label for="RoomCapacity">Room Capacity<span style="color : red;">*</span>:</label>
+        <label for="RoomCapacity">@Localization["Room Capacity"]<span style="color : red;">@Localization["*"]</span>@Localization[":"]</label>
         <InputNumber id="RoomCapacity" @bind-Value="obj.RoomCapacity" class="form-control" />
     </div>
 
-    <button class="btn btn-primary" type="submit">Update</button>
-    <button class="btn btn-secondary" @onclick="Cancel" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit">@Localization["Update"]</button>
+    <button class="btn btn-secondary" @onclick="Cancel" type="button">@Localization["Cancel"]</button>
 </EditForm>
 
 @code {
@@ -52,6 +54,6 @@
     }
     void Cancel()
     {
-        NavigationManager.NavigateTo("Rooms", true);
+        NavigationManager.NavigateTo("Rooms");
     }
 }

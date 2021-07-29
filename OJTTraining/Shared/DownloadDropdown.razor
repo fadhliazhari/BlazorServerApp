@@ -1,19 +1,21 @@
-﻿@inject IJSRuntime js
+﻿@inject IStringLocalizer<Shared.DownloadDropdown> Localization
+
+@inject IJSRuntime js
 
 <div class="dropdown">
     <button class="btn btn-secondary dropdown-toggle"
             data-toggle="dropdown" aria-expanded="@(showDownload? "true":"false")"
             @onclick="() => this.showDownload = !this.showDownload"
             @onblur="DownloadOutFocus">
-        <span class="oi oi-data-transfer-download" aria-hidden="true"> Download </span>
+        <span class="oi oi-data-transfer-download" aria-hidden="true"> @Localization["Download"] </span>
     </button>
     <div class="dropdown-menu @(showDownload? "show":"")">
         <a class="dropdown-item" type="button" @onclick="DownloadExcel">
-            <span class="oi oi-spreadsheet" aria-hidden="true"> Excel </span>
-        </a>
+            <span class="oi oi-spreadsheet" aria-hidden="true"> @Localization["Excel"] </span>
+</a>
         <a class="dropdown-item" type="button" @onclick="DownloadCSV">
-            <span class="oi oi-document" aria-hidden="true"> CSV </span>
-        </a>
+            <span class="oi oi-document" aria-hidden="true"> @Localization["CSV"] </span>
+</a>
     </div>
 </div>
 

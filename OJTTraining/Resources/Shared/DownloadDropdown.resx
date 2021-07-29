@@ -117,16 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Home" xml:space="preserve">
-    <value>ホーム</value>
+  <data name="CSV" xml:space="preserve">
+    <value>CSV</value>
   </data>
-  <data name="Hospital" xml:space="preserve">
-    <value>病院</value>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
   </data>
-  <data name="Patients" xml:space="preserve">
-    <value>患者</value>
-  </data>
-  <data name="Rooms" xml:space="preserve">
-    <value>部屋</value>
+  <data name="Excel" xml:space="preserve">
+    <value>Excel</value>
   </data>
 </root>

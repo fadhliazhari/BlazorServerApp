@@ -1,5 +1,7 @@
-﻿@page "/DeleteRoom/{Id}"
+﻿@page "/Rooms/DeleteRoom/{Id}"
 @attribute [Authorize(Roles = "infra")]
+
+@inject IStringLocalizer<App> Localization
 
 @using System.Globalization
 @using Microsoft.AspNetCore.Components.Authorization
@@ -10,7 +12,7 @@
 @inject RoomService roomService
 @inject NavigationManager NavigationManager
 
-<h2>Delete Room</h2>
+<h2>@Localization["Delete Room"]</h2>
 <hr />
 
 <div>
@@ -22,15 +24,15 @@
     }
 
     <div class="form-group">
-        <label for="RoomNumber" class="font-weight-bold">Room Number:</label>
+        <label for="RoomNumber" class="font-weight-bold">@Localization["Room Number:"]</label>
         <label id="RoomNumber">@obj.RoomNumber</label>
     </div>
     <div class="form-group">
-        <label for="RoomCapacity" class="font-weight-bold">Room Capacity:</label>
+        <label for="RoomCapacity" class="font-weight-bold">@Localization["Room Capacity:"]</label>
         <label id="RoomCapacity">@obj.RoomCapacity</label>
     </div>
     <div class="form-group">
-        <label for="RoomCapacity" class="font-weight-bold">No of Patients:</label>
+        <label for="RoomCapacity" class="font-weight-bold">@Localization["No of Patients:"]</label>
         <label id="RoomCapacity">
             <a class="nav-link" href="@queryString">
                 <b>@noOfPatients</b>
@@ -38,8 +40,8 @@
         </label>
     </div>
 
-    <button class="btn btn-danger" @onclick="Delete">Delete</button>
-    <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+    <button class="btn btn-danger" @onclick="Delete">@Localization["Delete"]</button>
+    <button class="btn btn-secondary" @onclick="Cancel">@Localization["Cancel"]</button>
 </div>
 
 @code {

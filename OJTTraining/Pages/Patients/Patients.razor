@@ -1,5 +1,8 @@
 ﻿@page "/patients"
 @attribute [Authorize]
+
+@inject IStringLocalizer<App> Localization
+
 @using System.Globalization;
 @using Microsoft.AspNetCore.WebUtilities;
 
@@ -9,38 +12,39 @@
 @inject IJSRuntime js
 @inject NavigationManager NavManager
 
-<h1>Patient Info @(count != 0 ? "(" + count.ToString(CultureInfo.CurrentCulture) + ")" : "")</h1>
+<h1>
+    @Localization["Patient Info"] @(count != 0 ? "(" + count.ToString(CultureInfo.CurrentCulture) + ")" : "")</h1>
 
 <div class="card">
     <div class="card-header nav-link" id="headingOne" @onclick="e => this.showSearch = !this.showSearch" role="button" style="cursor: pointer;">
         <h5 class="mb-0">
-            Search Patient
+            @Localization["Search Patient"]
         </h5>
     </div>
     <div id="collapseOne" class="collapse @(showSearch ? "show" : "")" aria-labelledby="headingOne">
         <div class="card-body">
             <div class="form">
                 <div class="form-group">
-                    <label for="PatientName">Patient Name:</label>
+                    <label for="PatientName">@Localization["Patient Name:"]</label>
                     <input id="PatientName" @bind="patientScreen.PatientName" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label for="RoomNumber">Room Number:</label>
+                    <label for="RoomNumber">@Localization["Room Number:"]</label>
                     <div id="RoomNumber" class="row">
                         <div class="col-md-10">
                             <input @bind="patientScreen.RoomNumber" class="form-control" />
                         </div>
                         <div class="col-md-2">
                             <select class="form-control selectpicker" @bind="match">
-                                <option value="0">Any</option>
-                                <option value="1">Exact</option>
+                                <option value="0">@Localization["Any"]</option>
+                                <option value="1">@Localization["Exact"]</option>
                             </select>
                         </div>
                     </div>
 
                 </div>
                 <div class="form-group">
-                    <label for="CheckinDate">Checkin Date:</label>
+                    <label for="CheckinDate">@Localization["Checkin Date:"]</label>
                     <div id="CheckinDate" class="form-row">
                         <div class="col-md-5">
                             <input type="date" @bind="patientScreen.CheckinDateStart" class="form-control" />
@@ -54,7 +58,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="CheckoutDate">Checkout Date:</label>
+                    <label for="CheckoutDate">@Localization["Checkout Date:"]</label>
                     <div id="CheckoutDate" class="form-row">
                         <div class="col-md-5">
                             <input type="date" @bind="patientScreen.CheckoutDateStart" class="form-control" />
@@ -68,7 +72,7 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary" @onclick="() => SearchPatient()">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Search
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> @Localization["Search"]
                 </button>
             </div>
         </div>
@@ -83,8 +87,8 @@
             <div>
                 <AuthorizeView Roles="admin">
                     <div class="">
-                        <a class="btn btn-primary" href="AddPatient">
-                            <span class="oi oi-plus" aria-hidden="true"></span> Add New
+                        <a class="btn btn-primary" href="Patients/AddPatient">
+                            <span class="oi oi-plus" aria-hidden="true"></span> @Localization["Add Patient"]
                         </a>
                     </div>
                 </AuthorizeView>
@@ -95,12 +99,12 @@
         <table class="table my-1">
             <thead>
                 <tr>
-                    <th>Patient Name</th>
-                    <th>Room Number</th>
-                    <th>Checkin Date</th>
-                    <th>Checkout Date</th>
+                    <th>@Localization["Patient Name"]</th>
+                    <th>@Localization["Room Number"]</th>
+                    <th>@Localization["Checkin Date"]</th>
+                    <th>@Localization["Checkout Date"]</th>
                     <AuthorizeView Roles="admin">
-                        <th>Action</th>
+                        <th>@Localization["Action"]</th>
                     </AuthorizeView>
                 </tr>
             </thead>
@@ -110,7 +114,7 @@
                     <tr>
                         <td colspan="5" align="center">
                             <div class="spinner-border text-info" role="status">
-                                <span class="sr-only">Loading...</span>
+                                <span class="sr-only">@Localization["Loading..."]</span>
                             </div>
                         </td>
                     </tr>
@@ -119,7 +123,7 @@
                 {
                     <tr>
                         <td colspan="5" align="center">
-                            <p><em>No Data</em></p>
+                            <p><em>@Localization["No Data"]</em></p>
                         </td>
                     </tr>
                 }
@@ -128,7 +132,7 @@
                     <Virtualize Items="@patient" Context="item">
                         <tr>
                             <td>
-                                <a class="nav-link" href="ViewPatient/@item.PatientGUID">
+                                <a class="nav-link" href="Patients/ViewPatient/@item.PatientGUID">
                                     <b>@item.PatientName</b>
                                 </a>
                             </td>
@@ -138,11 +142,11 @@
                             <AuthorizeView Roles="admin">
                                 <td>
                                     <span>
-                                        <a class="btn btn-info my-1" href="EditPatient/@item.PatientGUID">
-                                            <span class="oi oi-pencil" aria-hidden="true"></span> Edit
+                                        <a class="btn btn-info my-1" href="Patients/EditPatient/@item.PatientGUID">
+                                            <span class="oi oi-pencil" aria-hidden="true"></span> @Localization["Edit"]
                                         </a>
-                                        <a class="btn btn-danger my-1" href="DeletePatient/@item.PatientGUID">
-                                            <span class="oi oi-trash" aria-hidden="true"></span> Delete
+                                        <a class="btn btn-danger my-1" href="Patients/DeletePatient/@item.PatientGUID">
+                                            <span class="oi oi-trash" aria-hidden="true"></span> @Localization["Delete"]
                                         </a>
                                     </span>
                                 </td>

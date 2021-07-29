@@ -117,16 +117,133 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Home" xml:space="preserve">
-    <value>ホーム</value>
+  <data name="*" xml:space="preserve">
+    <value>＊</value>
   </data>
-  <data name="Hospital" xml:space="preserve">
-    <value>病院</value>
+  <data name="--select--" xml:space="preserve">
+    <value>ー選択ー</value>
   </data>
-  <data name="Patients" xml:space="preserve">
-    <value>患者</value>
+  <data name=":" xml:space="preserve">
+    <value>：</value>
   </data>
-  <data name="Rooms" xml:space="preserve">
-    <value>部屋</value>
+  <data name="Action" xml:space="preserve">
+    <value>アクション</value>
+  </data>
+  <data name="Add Patient" xml:space="preserve">
+    <value>患者追加</value>
+  </data>
+  <data name="Add Room" xml:space="preserve">
+    <value>部屋追加</value>
+  </data>
+  <data name="Any" xml:space="preserve">
+    <value>どれか</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>可用</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Checkin Date" xml:space="preserve">
+    <value>チェックイン日時</value>
+  </data>
+  <data name="Checkin Date:" xml:space="preserve">
+    <value>チェックイン日時：</value>
+  </data>
+  <data name="Checkout Date" xml:space="preserve">
+    <value>チェックアウト日時</value>
+  </data>
+  <data name="Checkout Date:" xml:space="preserve">
+    <value>チェックアウト日時：</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Closed" xml:space="preserve">
+    <value>クローズ</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Delete Patient" xml:space="preserve">
+    <value>患者削除</value>
+  </data>
+  <data name="Delete Room" xml:space="preserve">
+    <value>部屋削除</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Exact" xml:space="preserve">
+    <value>等しい</value>
+  </data>
+  <data name="Full" xml:space="preserve">
+    <value>満員</value>
+  </data>
+  <data name="Loading..." xml:space="preserve">
+    <value>読み込み中…</value>
+  </data>
+  <data name="No Data" xml:space="preserve">
+    <value>データなし</value>
+  </data>
+  <data name="No of Patients:" xml:space="preserve">
+    <value>患者数：</value>
+  </data>
+  <data name="Overcrowded" xml:space="preserve">
+    <value>過密</value>
+  </data>
+  <data name="Patient Info" xml:space="preserve">
+    <value>患者情報</value>
+  </data>
+  <data name="Patient Name" xml:space="preserve">
+    <value>患者名</value>
+  </data>
+  <data name="Patient Name:" xml:space="preserve">
+    <value>患者名：</value>
+  </data>
+  <data name="Room Capacity" xml:space="preserve">
+    <value>部屋容量</value>
+  </data>
+  <data name="Room Capacity:" xml:space="preserve">
+    <value>部屋容量：</value>
+  </data>
+  <data name="Room Info" xml:space="preserve">
+    <value>部屋情報</value>
+  </data>
+  <data name="Room Number" xml:space="preserve">
+    <value>部屋番号</value>
+  </data>
+  <data name="Room Number:" xml:space="preserve">
+    <value>部屋番号：</value>
+  </data>
+  <data name="Room Status" xml:space="preserve">
+    <value>部屋ステータス</value>
+  </data>
+  <data name="Room Status:" xml:space="preserve">
+    <value>部屋ステータス：</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>検索</value>
+  </data>
+  <data name="Search Patient" xml:space="preserve">
+    <value>患者検索</value>
+  </data>
+  <data name="Search Room" xml:space="preserve">
+    <value>部屋検索</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>登録</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Update Patient" xml:space="preserve">
+    <value>部屋更新</value>
+  </data>
+  <data name="View Patient" xml:space="preserve">
+    <value>患者照会</value>
+  </data>
+  <data name="View Room" xml:space="preserve">
+    <value>部屋照会</value>
   </data>
 </root>

@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using OJTTraining.Areas.Identity;
 using OJTTraining.Data;
 using OJTTraining.Service;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace OJTTraining

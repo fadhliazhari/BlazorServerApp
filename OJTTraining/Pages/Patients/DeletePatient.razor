@@ -1,5 +1,7 @@
-﻿@page "/DeletePatient/{Id}"
+﻿@page "/Patients/DeletePatient/{Id}"
 @attribute [Authorize(Roles = "admin")]
+
+@inject IStringLocalizer<App> Localization
 
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -9,28 +11,28 @@
 @inject PatientService patientService
 @inject NavigationManager NavigationManager
 
-<h2>Delete Patient</h2>
+<h2>@Localization["Delete Patient"]</h2>
 <hr />
 <div>
     <div class="form-group">
-        <label for="PatientName" class="font-weight-bold">Patient Name:</label>
+        <label for="PatientName" class="font-weight-bold">@Localization["Patient Name:"]</label>
         <label id="PatientName">@obj.PatientName</label>
     </div>
     <div class="form-group">
-        <label for="RoomNumber" class="font-weight-bold">Room Number:</label>
+        <label for="RoomNumber" class="font-weight-bold">@Localization["Room Number:"]</label>
         <label id="RoomNumber">@obj.RoomNumber</label>
     </div>
     <div class="form-group">
-        <label for="CheckinDate" class="font-weight-bold">Checkin Date:</label>
+        <label for="CheckinDate" class="font-weight-bold">@Localization["Checkin Date:"]</label>
         <label id="CheckinDate">@obj.CheckinDate</label>
     </div>
     <div class="form-group">
-        <label for="CheckoutDate" class="font-weight-bold">Checkout Date:</label>
+        <label for="CheckoutDate" class="font-weight-bold">@Localization["Checkout Date:"]</label>
         <label id="CheckoutDate">@obj.CheckoutDate</label>
     </div>
 
-    <button class="btn btn-danger" @onclick="Delete">Delete</button>
-    <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+    <button class="btn btn-danger" @onclick="Delete">@Localization["Delete"]</button>
+    <button class="btn btn-secondary" @onclick="Cancel">@Localization["Cancel"]</button>
 </div>
 
 @code {
@@ -55,7 +57,8 @@
         var deleteDialog = Modal.Show<DeleteConfirmation>("Delete", options);
         var result = await deleteDialog.Result;
 
-        if (!result.Cancelled) {
+        if (!result.Cancelled)
+        {
             await DeleteCallback();
         }
     }

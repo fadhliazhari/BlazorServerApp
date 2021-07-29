@@ -1,18 +1,27 @@
-﻿<div class="row mx-0 my-1">
+﻿@inject IStringLocalizer<Shared.Pagination> Localization
+<div class="row mx-0 my-1">
     <div class="row">
-        <div class="my-auto"><em>Showing @(TotalCount != 0 ? Skip + 1 : 0) to @(Skip + ViewCount) of @TotalCount.</em></div>
-        <div class="mx-1 my-auto"><em>Rows per page:</em></div>
+        <div class="my-auto"><em>@Localization["Showing {0} to {1} of {2}.", (TotalCount != 0 ? Skip + 1 : 0), (Skip + ViewCount), TotalCount]</em></div>
         <div class="mx-1 my-auto">
-            <select class="custom-select" value="@Top" @onchange="Change">
-                <option value="10">10</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
+            <div class="row">
+                <div class="mx-1 my-auto">
+                    <em>
+                        @Localization["Rows per page:"]
+                    </em>
+                </div>
+                <div class="mx-1 my-auto">
+                    <select class="custom-select" value="@Top" @onchange="Change">
+                        <option value="10">10</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
     <div class="ml-auto">
-        <ul class="pagination">
-            <li class="page-item @(Top + Skip > Top ? "" : "disabled")"><button class="page-link" @onclick="Previous">Previous</button></li>
+        <ul class="pagination my-1">
+            <li class="page-item @(Top + Skip > Top ? "" : "disabled")"><button class="page-link" @onclick="Previous">@Localization["Previous"]</button></li>
             <li class="page-item @(currentPage == 1 ? "active" : "")"><button class="page-link" @onclick="() => GetPage.InvokeAsync(1)">1</button></li>
             @if (totalPage > 0)
             {
@@ -47,20 +56,34 @@
                 {
                     <li class="page-item @(currentPage == totalPage - 1 ? "active" : "")"><button class="page-link" @onclick="() => GetPage.InvokeAsync(totalPage - 1)">@(totalPage - 1)</button></li>
                 }
-                
+
                 if (totalPage > 2)
                 {
                     <li class="page-item @(currentPage == totalPage ? "active" : "")"><button class="page-link" @onclick="() => GetPage.InvokeAsync(totalPage)">@totalPage</button></li>
                 }
             }
-            <li class="page-item @(Top + Skip < TotalCount ? "" : "disabled")"><button class="page-link" @onclick="Next">Next</button></li>
+            <li class="page-item @(Top + Skip < TotalCount ? "" : "disabled")"><button class="page-link" @onclick="Next">@Localization["Next"]</button></li>
         </ul>
     </div>
 </div>
 
 @code{
-    private int currentPage { get { return (Skip / Top) + 1; } }
-    private int totalPage { get { return (int)Math.Ceiling((float)TotalCount / Top); } }
+    private int currentPage
+    {
+        get
+        {
+            if (Top == 0) return 1;
+            return (Skip / Top) + 1;
+        }
+    }
+    private int totalPage
+    {
+        get
+        {
+            if (Top == 0) return 0;
+            return (int)Math.Ceiling((float)TotalCount / Top);
+        }
+    }
 
     [Parameter] public int Skip { get; set; }
     [Parameter] public int Top { get; set; }
@@ -75,13 +98,19 @@
     {
         Skip = Skip + Top;
 
+        //if (!GetPage.Equals(null))
+        //{
         await GetPage.InvokeAsync(currentPage);
+        //}
     }
 
     async Task Previous()
     {
         Skip = Skip - Top;
 
+        //if (!GetPage.Equals(null))
+        //{
         await GetPage.InvokeAsync(currentPage);
+        //}
     }
 }

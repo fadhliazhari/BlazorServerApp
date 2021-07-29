@@ -117,16 +117,133 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Home" xml:space="preserve">
-    <value>ホーム</value>
+  <data name="*" xml:space="preserve">
+    <value>*</value>
   </data>
-  <data name="Hospital" xml:space="preserve">
-    <value>病院</value>
+  <data name="--select--" xml:space="preserve">
+    <value>--pilih--</value>
   </data>
-  <data name="Patients" xml:space="preserve">
-    <value>患者</value>
+  <data name=":" xml:space="preserve">
+    <value>:</value>
   </data>
-  <data name="Rooms" xml:space="preserve">
-    <value>部屋</value>
+  <data name="Action" xml:space="preserve">
+    <value>Aksi</value>
+  </data>
+  <data name="Add Patient" xml:space="preserve">
+    <value>Tambah Pesakit</value>
+  </data>
+  <data name="Add Room" xml:space="preserve">
+    <value>Tambah Bilik</value>
+  </data>
+  <data name="Any" xml:space="preserve">
+    <value>Mana mana</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Sedia</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Batal</value>
+  </data>
+  <data name="Checkin Date" xml:space="preserve">
+    <value>Tarikh Daftar Masuk</value>
+  </data>
+  <data name="Checkin Date:" xml:space="preserve">
+    <value>Tarikh Daftar Masuk:</value>
+  </data>
+  <data name="Checkout Date" xml:space="preserve">
+    <value>Tarikh Daftar Keluar</value>
+  </data>
+  <data name="Checkout Date:" xml:space="preserve">
+    <value>Tarikh Daftar Keluar:</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Tutup</value>
+  </data>
+  <data name="Closed" xml:space="preserve">
+    <value>Tutup</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Padam</value>
+  </data>
+  <data name="Delete Patient" xml:space="preserve">
+    <value>Padam Pesakit</value>
+  </data>
+  <data name="Delete Room" xml:space="preserve">
+    <value>Padam Bilik</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Exact" xml:space="preserve">
+    <value>Tepat</value>
+  </data>
+  <data name="Full" xml:space="preserve">
+    <value>Penuh</value>
+  </data>
+  <data name="Loading..." xml:space="preserve">
+    <value>Memuat...</value>
+  </data>
+  <data name="No Data" xml:space="preserve">
+    <value>Tiada Data</value>
+  </data>
+  <data name="No of Patients:" xml:space="preserve">
+    <value>Bilangan Pesakit:</value>
+  </data>
+  <data name="Overcrowded" xml:space="preserve">
+    <value>Sesak</value>
+  </data>
+  <data name="Patient Info" xml:space="preserve">
+    <value>Informasi Pesakit</value>
+  </data>
+  <data name="Patient Name" xml:space="preserve">
+    <value>Nama Pesakit</value>
+  </data>
+  <data name="Patient Name:" xml:space="preserve">
+    <value>Nama Pesakit:</value>
+  </data>
+  <data name="Room Capacity" xml:space="preserve">
+    <value>Kapasiti Bilik</value>
+  </data>
+  <data name="Room Capacity:" xml:space="preserve">
+    <value>Kapasiti Bilik:</value>
+  </data>
+  <data name="Room Info" xml:space="preserve">
+    <value>Info Bilik</value>
+  </data>
+  <data name="Room Number" xml:space="preserve">
+    <value>Nombor Bilik</value>
+  </data>
+  <data name="Room Number:" xml:space="preserve">
+    <value>Nombor Bilik:</value>
+  </data>
+  <data name="Room Status" xml:space="preserve">
+    <value>Status Bilik</value>
+  </data>
+  <data name="Room Status:" xml:space="preserve">
+    <value>Status Bilik:</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Cari</value>
+  </data>
+  <data name="Search Patient" xml:space="preserve">
+    <value>Cari Pesakit</value>
+  </data>
+  <data name="Search Room" xml:space="preserve">
+    <value>Cari Bilik</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Daftar</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Kemas Kini</value>
+  </data>
+  <data name="Update Patient" xml:space="preserve">
+    <value>Kemas Kini Pesakit</value>
+  </data>
+  <data name="View Patient" xml:space="preserve">
+    <value>Info Pesakit</value>
+  </data>
+  <data name="View Room" xml:space="preserve">
+    <value>Info Bilik</value>
   </data>
 </root>

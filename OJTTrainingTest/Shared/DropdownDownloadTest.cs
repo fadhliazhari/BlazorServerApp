@@ -1,5 +1,6 @@
 using Bunit;
 using OJTTraining.Shared;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text;
 using System.Threading;
@@ -13,19 +14,21 @@ namespace OJTTrainingTest
         [Fact]
         public void MarkupTest()
         {
+            Services.AddLocalization(options => options.ResourcesPath = "Resources");
             // Act
             var dropdown = RenderComponent<DownloadDropdown>();
 
             // Assert
-            Assert.True(dropdown.FindAll("div")[0].ClassList.Contains("dropdown"));
-            Assert.True(dropdown.FindAll("div")[1].ClassList.Contains("dropdown-menu"));
-            Assert.True(dropdown.FindAll("a")[0].ClassList.Contains("dropdown-item"));
-            Assert.True(dropdown.FindAll("a")[1].ClassList.Contains("dropdown-item"));
+            Assert.Contains("dropdown", dropdown.FindAll("div")[0].ClassList);
+            Assert.Contains("dropdown-menu", dropdown.FindAll("div")[1].ClassList);
+            Assert.Contains("dropdown-item", dropdown.FindAll("a")[0].ClassList);
+            Assert.Contains("dropdown-item", dropdown.FindAll("a")[1].ClassList);
         }
 
         [Fact]
         public void WithParamMarkupTest()
         {
+            Services.AddLocalization(options => options.ResourcesPath = "Resources");
             // Function Mock
             static async Task<byte[]> ReturnEmpty()
             {
@@ -43,15 +46,16 @@ namespace OJTTrainingTest
             });
 
             // Assert
-            Assert.True(dropdown.FindAll("div")[0].ClassList.Contains("dropdown"));
-            Assert.True(dropdown.FindAll("div")[1].ClassList.Contains("dropdown-menu"));
-            Assert.True(dropdown.FindAll("a")[0].ClassList.Contains("dropdown-item"));
-            Assert.True(dropdown.FindAll("a")[1].ClassList.Contains("dropdown-item"));
+            Assert.Contains("dropdown", dropdown.FindAll("div")[0].ClassList);
+            Assert.Contains("dropdown-menu", dropdown.FindAll("div")[1].ClassList);
+            Assert.Contains("dropdown-item", dropdown.FindAll("a")[0].ClassList);
+            Assert.Contains("dropdown-item", dropdown.FindAll("a")[1].ClassList);
         }
 
         [Fact]
         public void DropdownButtonTest()
         {
+            Services.AddLocalization(options => options.ResourcesPath = "Resources");
             // Act
             var dropdown = RenderComponent<DownloadDropdown>();
 
@@ -84,6 +88,8 @@ namespace OJTTrainingTest
         [Fact]
         public void NoParamButtonTest()
         {
+            Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
             var dropdown = RenderComponent<DownloadDropdown>();
 
             // Check all button function properly
@@ -94,6 +100,8 @@ namespace OJTTrainingTest
         [Fact]
         public void ExcelButtonTest()
         {
+            Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
             // Parameters
             var fileName = "test";
             var testBytes = Encoding.ASCII.GetBytes("1234567890ABCDEFG");
@@ -123,6 +131,8 @@ namespace OJTTrainingTest
         [Fact]
         public void CSVButtonTest()
         {
+            Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
             // Parameters
             var fileName = "test";
             var testBytes = Encoding.ASCII.GetBytes("1234567890ABCDEFG");
