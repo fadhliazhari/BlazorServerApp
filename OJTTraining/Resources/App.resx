@@ -246,4 +246,7 @@
   <data name="View Room" xml:space="preserve">
     <value>View Room</value>
   </data>
+  <data name="{0} More..." xml:space="preserve">
+    <value>{0} More...</value>
+  </data>
 </root>

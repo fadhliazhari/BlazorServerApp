@@ -1,4 +1,7 @@
 ﻿@inherits InputText
+
+@inject IStringLocalizer<App> Localization
+
 @using OJTTraining.Data
 @using OJTTraining.Service
 @inject RoomService roomService
@@ -13,18 +16,21 @@
         {
             <div align="center">
                 <div class="spinner-border text-info" role="status">
-                    <span class="sr-only">Loading...</span>
+                    <span class="sr-only">@Localization["Loading..."]</span>
                 </div>
             </div>
         }
         else if (roomCount == 0)
         {
-            <a class="dropdown-item disabled">No Data</a>
+            <a class="dropdown-item disabled">@Localization["No Data"]</a>
         }
         else
         {
             <a class="dropdown-item disabled">
-                <div class="row"><div class="col"><b>Room Number</b></div><div class="col"><b>Room Status</b></div></div>
+                <div class="row">
+                    <div class="col"><b>@Localization["Room Number"]</b></div>
+                    <div class="col"><b>@Localization["Room Status"]</b></div>
+                </div>
             </a>
             foreach (var room in dropDownList)
             {
@@ -38,7 +44,7 @@
         }
         @if (roomCount > maxCount)
         {
-            <a class="dropdown-item" @onclick="More" tabindex="-1">@(roomCount - maxCount) More..</a>
+            <a class="dropdown-item" @onclick="More" tabindex="-1">@Localization["{0} More...",(roomCount - maxCount)]</a>
         }
     </div>
 </div>
