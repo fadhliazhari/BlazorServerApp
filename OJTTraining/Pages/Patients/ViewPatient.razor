@@ -44,6 +44,11 @@
     protected override async Task OnInitializedAsync()
     {
         obj = await Task.Run(() => patientService.GetPatientAsync(Guid.Parse(Id)));
+
+        if (obj == null)
+        {
+            NavigationManager.NavigateTo("404");
+        }
     }
 
     void Cancel()

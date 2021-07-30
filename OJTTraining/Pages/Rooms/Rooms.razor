@@ -13,11 +13,16 @@
 <h1>@Localization["Room Info"] @(count != 0 ? "(" + count.ToString(CultureInfo.CurrentCulture) + ")" : "")</h1>
 
 <div class="card">
-    <div class="card-header nav-link" id="headingOne" @onclick="e => this.showSearch = !this.showSearch" role="button" style="cursor: pointer;">
-        <h5 class="mb-0">
-            @Localization["Search Room"]
-        </h5>
-    </div>
+    <button class="card-header" id="headingOne" @onclick="e => this.showSearch = !this.showSearch" role="button">
+        <div class="row mx-1">
+            <div>
+                <h5 class="mb-0">
+                    @Localization["Search Room"]
+                </h5>
+            </div>
+            <div class="ml-auto text-muted">@(showSearch? Localization["[-hide-]"]: Localization["[-show-]"])</div>
+        </div>
+    </button>
     <div id="collapseOne" class="collapse @(showSearch ? "show" : "")" aria-labelledby="headingOne">
         <div class="card-body">
             <EditForm Model="roomScreen" OnSubmit="@SearchRoom">

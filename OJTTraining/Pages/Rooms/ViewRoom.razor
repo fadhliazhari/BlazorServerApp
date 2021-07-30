@@ -48,6 +48,13 @@
     protected override async Task OnInitializedAsync()
     {
         obj = await Task.Run(() => roomService.GetRoomAsync(Id));
+
+        if (obj == null)
+        {
+            NavigationManager.NavigateTo("404");
+            return;
+        }
+
         noOfPatients = await roomService.GetNoUsedAsync(obj);
         queryString = $"Patients?roomNumber={obj.RoomNumber}&checkinBy={DateTime.Now.ToString("d", CultureInfo.CurrentCulture)}&checkoutBefore={DateTime.Now.ToString("d", CultureInfo.CurrentCulture)}";
     }

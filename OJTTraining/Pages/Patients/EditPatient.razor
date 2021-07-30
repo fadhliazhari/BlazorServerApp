@@ -78,6 +78,12 @@ else
     {
         obj = await Task.Run(() => patientService.GetPatientAsync(Guid.Parse(Id)));
 
+        if (obj == null)
+        {
+            NavigationManager.NavigateTo("404");
+            return;
+        }
+
         editContext = new(obj);
         editContext.OnValidationRequested += HandleValidationRequested;
         messageStore = new(editContext);

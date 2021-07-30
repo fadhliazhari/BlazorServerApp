@@ -246,6 +246,12 @@
   <data name="View Room" xml:space="preserve">
     <value>Info Bilik</value>
   </data>
+  <data name="[-hide-]" xml:space="preserve">
+    <value>[-tutup-]</value>
+  </data>
+  <data name="[-show-]" xml:space="preserve">
+    <value>[-tunjuk-]</value>
+  </data>
   <data name="{0} More..." xml:space="preserve">
     <value>Lagi {0}...</value>
   </data>

@@ -21,10 +21,10 @@
             <li class="nav-item px-3">
                 <div class="dropdown-divider"></div>
             </li>
-            <li class="nav-item px-3 dropdown @(expandHospitalNav?"show":"")">
-                <NavLink id="navbarDropdown" class="@(hospitalNavCss)" @onclick="ToggleHospNavMenu">
+            <li class="nav-item px-3">
+                <NavLink href="javascript:;" class="@(IsHospitalActive() ? "nav-link nav-focus active" : "nav-focus nav-link")" @onclick="@(() => { expandHospitalNav = !expandHospitalNav; } )">
                     <span class="oi oi-medical-cross" aria-hidden="true"></span> @Localization["Hospital"]
-                    <span class="oi oi-caret-@(expandHospitalNav?"bottom":"right") ml-auto" aria-hidden="true"></span>
+                    <span class="oi oi-caret-@(expandHospitalNav ? "bottom" : "right" ) ml-auto" aria-hidden="true"></span>
                 </NavLink>
             </li>
             @if (expandHospitalNav)
@@ -56,8 +56,6 @@
     private bool expandHospitalNav = false;
     private bool isInfra = false;
 
-    private string hospitalNavCss = "nav-link";
-
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
@@ -73,27 +71,14 @@
         }
     }
 
-    protected override void OnParametersSet()
+    bool IsHospitalActive()
     {
-        var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.Path, UriFormat.Unescaped);
-        if (uri.Contains("patients") || uri.Contains("rooms"))
-        {
-            expandHospitalNav = true;
-            hospitalNavCss = "nav-link active";
-        }
-        else
-        {
-            hospitalNavCss = "nav-link";
-        }
+        var relativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri).ToLower();
+        return relativePath.StartsWith("patient") || relativePath.StartsWith("rooms");
     }
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
-    }
-
-    private void ToggleHospNavMenu()
-    {
-        expandHospitalNav = !expandHospitalNav;
     }
 }

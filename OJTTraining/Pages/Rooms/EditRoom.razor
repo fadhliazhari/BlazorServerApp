@@ -39,6 +39,11 @@
     protected override async Task OnInitializedAsync()
     {
         obj = await Task.Run(() => roomService.GetRoomAsync(Id));
+
+        if (obj == null)
+        {
+            NavigationManager.NavigateTo("404");
+        }
     }
 
     protected async void UpdateRoom()

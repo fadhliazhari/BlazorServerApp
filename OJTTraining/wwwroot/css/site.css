@@ -49,10 +49,11 @@ a, .btn-link {
     top: 0.5rem;
 }
 
-.form-control.is-invalid {
-    background-image: none;
+button.card-header {
+    border: 1px solid rgba(0,0,0,.125);
+    cursor: pointer;
 }
 
-.form-control.is-invalid{
-    background-image: none;
+.btn-link.focus, .btn-link:focus {
+   box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
 }
