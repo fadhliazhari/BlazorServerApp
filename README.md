@@ -1,4 +1,6 @@
-# OJT Training Website
+# Blazor Server Test Website
+
+[![.NET](https://github.com/fadhliazhari/BlazorServerApp/actions/workflows/dotnet.yml/badge.svg)](https://github.com/fadhliazhari/BlazorServerApp/actions/workflows/dotnet.yml)
 
 This is a Test Website project. 
 
