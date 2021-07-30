@@ -22,8 +22,9 @@
         </h5>
     </div>
     <div id="collapseOne" class="collapse @(showSearch ? "show" : "")" aria-labelledby="headingOne">
+        
         <div class="card-body">
-            <div class="form">
+            <EditForm Model="patientScreen" OnSubmit="@SearchPatient">
                 <div class="form-group">
                     <label for="PatientName">@Localization["Patient Name:"]</label>
                     <input id="PatientName" @bind="patientScreen.PatientName" class="form-control" />
@@ -71,10 +72,10 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary" @onclick="() => SearchPatient()">
+                <button type="submit" class="btn btn-primary">
                     <span class="oi oi-magnifying-glass" aria-hidden="true"></span> @Localization["Search"]
                 </button>
-            </div>
+            </EditForm>
         </div>
     </div>
 </div>

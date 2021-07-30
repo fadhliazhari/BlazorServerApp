@@ -20,7 +20,7 @@
     </div>
     <div id="collapseOne" class="collapse @(showSearch ? "show" : "")" aria-labelledby="headingOne">
         <div class="card-body">
-            <div class="form">
+            <EditForm Model="roomScreen" OnSubmit="@SearchRoom">
                 <div class="form-group">
                     <label for="RoomNumber">@Localization["Room Number:"]</label>
                     <input id="RoomNumber" @bind="roomScreen.RoomNumber" class="form-control" />
@@ -35,10 +35,10 @@
                         <option value="Closed">@Localization["Closed"]</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary" @onclick="SearchRoom">
+                <button type="submit" class="btn btn-primary">
                     <span class="oi oi-magnifying-glass" aria-hidden="true"></span> @Localization["Search"]
                 </button>
-            </div>
+            </EditForm>
         </div>
     </div>
 </div>
